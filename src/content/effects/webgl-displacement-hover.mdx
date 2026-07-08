@@ -1,0 +1,74 @@
+---
+title: 'WebGL Displacement Hover'
+category: 'visual-effects'
+dna: ['Bold', 'Fluid', 'Dimensional', 'Vivid', 'Cinematic']
+summary: 'Al passaggio del cursore l''immagine si deforma attraverso una mappa di displacement renderizzata in WebGL, come fosse liquida.'
+
+overview:
+  description: |
+    Due immagini (quella a riposo e quella di destinazione) e una mappa di
+    displacement in scala di grigi vengono composte in uno shader: i valori
+    della mappa determinano quanto e in che direzione i pixel delle due
+    texture si spostano durante la transizione, producendo una dissolvenza
+    liquida invece di un semplice cross-fade.
+
+    Il ciclo è in tre fasi: applicazione crescente della mappa (l'immagine di
+    partenza si deforma), scambio delle texture al picco della distorsione,
+    rilascio della mappa (l'immagine di arrivo torna nitida). Un solo
+    `WebGLRenderer` gestisce l'intero ciclo; il render loop parte al mount e
+    si ferma quando la preview esce dal viewport.
+  bestFor:
+    - 'Hero di portfolio ad alto impatto visivo'
+    - 'Case study singoli con una sola immagine protagonista'
+    - 'Pagine dove è ammesso un solo elemento WebGL alla volta (PROJECT_SPEC.md §7)'
+  avoid:
+    - 'Gallerie con molte immagini (un contesto WebGL per istanza è troppo costoso)'
+    - 'Dispositivi di fascia bassa senza un fallback statico'
+    - 'Contenuti editoriali dove il testo deve restare protagonista'
+
+build:
+  technology: ['WebGL', 'GLSL', 'Three.js']
+  libraries:
+    - name: 'Three.js'
+      url: 'https://threejs.org/'
+  difficulty: 4
+  performance: 'heavy'
+  notes: 'Un solo contesto WebGL attivo per pagina (PROJECT_SPEC.md §7): il modulo dispone renderer, geometrie, materiali e texture in `destroy()` e non ne apre uno nuovo se un altro è già montato.'
+
+knowledge:
+  origin: 'Tecnica emersa nei portfolio "creative dev" tra il 2017 e il 2019, costruita sul displacement mapping via shader — variante WebGL delle dissolvenze a maschera.'
+  popularizedBy:
+    - 'Portfolio e studi creative-dev della scena Awwwards'
+    - 'Tutorial Codrops sulla distorsione WebGL'
+  alternatives:
+    - 'Distorsione CSS con filtri SVG, più leggera ma con meno controllo'
+    - 'Depth Parallax, illusione di profondità senza shader custom'
+  resources:
+    - title: 'WebGL Distortion Hover Effects'
+      url: 'https://tympanus.net/codrops/2018/04/10/webgl-distortion-hover-effects/'
+      type: 'article'
+    - title: 'How to Create Motion Hover Effects with Image Distortions using Three.js'
+      url: 'https://tympanus.net/codrops/2019/10/21/how-to-create-motion-hover-effects-with-image-distortions-using-three-js/'
+      type: 'article'
+    - title: 'Three.js — documentazione ufficiale'
+      url: 'https://threejs.org/docs/'
+      type: 'doc'
+
+explore:
+  relatedEffects: []
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] È l'effetto con il rapporto più alto tra
+  impatto e rischio del catalogo: spettacolare la prima volta, stancante se
+  ricompare più di una volta per sessione. In un portfolio fotografico lo
+  userei una sola volta, sulla cover, mai ripetuto in griglia.
+
+preview:
+  kind: 'webgl'
+  lite: 'webgl-displacement-hover'
+  module: 'src/previews/webgl-displacement-hover.ts'
+
+addedAt: '2026-07-08'
+status: 'draft'
+---

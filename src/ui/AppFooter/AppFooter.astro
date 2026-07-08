@@ -1,8 +1,7 @@
 ---
 // AppFooter — footer minimo: nome, anno, contatto (COMPONENT_RULES.md).
-// Nessun documento di progetto specifica un contatto reale: il prop
-// contactLabel/contactHref resta inespresso finché il curatore non lo
-// fornisce (vedi CHANGELOG.md), per non spedire un dato inventato.
+// Contatto approvato dal curatore il 2026-07-08 (vedi CHANGELOG.md):
+// link al sito, testo = dominio senza protocollo.
 import PageShell from '../PageShell/PageShell.astro';
 import Divider from '../Divider/Divider.astro';
 import styles from './AppFooter.module.css';
@@ -12,7 +11,10 @@ interface Props {
   contactHref?: string;
 }
 
-const { contactLabel, contactHref } = Astro.props;
+const {
+  contactLabel = 'www.gaiasciascia.com',
+  contactHref = 'https://www.gaiasciascia.com',
+} = Astro.props;
 const year = new Date().getFullYear();
 ---
 

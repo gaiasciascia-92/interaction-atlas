@@ -1,0 +1,71 @@
+---
+title: 'Blur Reveal'
+category: 'motion'
+dna: ['Blurred', 'Editorial', 'Calm', 'Fluid', 'Soft']
+summary: 'L''immagine entra a fuoco progressivamente mentre scorre in vista: la nitidezza diventa il segnale di arrivo.'
+
+overview:
+  description: |
+    Un'immagine parte visibilmente sfocata (`filter: blur()`) e a bassa opacità;
+    quando entra nel viewport, sfocatura e opacità si risolvono in modo continuo
+    fino alla nitidezza piena. È l'inverso della messa a fuoco fotografica letta
+    al contrario: invece di scegliere il fuoco prima dello scatto, qui è lo
+    scroll a "sviluppare" l'immagine.
+
+    Tecnicamente sono due strati progressivi: un valore di `blur()` che cala da
+    ~16px a 0 e un'opacità che sale da ~0.4 a 1, entrambi legati alla posizione
+    di scroll. Il trigger può essere nativo (`animation-timeline: view()`,
+    supportato da Chromium) con fallback a `IntersectionObserver` che aggiunge
+    una classe `.is-revealed` sugli altri motori — nessun listener `scroll`
+    diretto, per non toccare il thread principale ad ogni frame.
+  bestFor:
+    - 'Serie fotografiche in scorrimento verticale (portfolio, case study)'
+    - 'Prime immagini "hero" di una pagina editoriale'
+    - 'Gallerie lunghe dove ogni immagine merita un ingresso silenzioso'
+  avoid:
+    - 'Griglie dense con molte immagini simultanee sopra la piega'
+    - 'Contenuti che devono essere leggibili immediatamente (testo, dati)'
+    - 'Pagine già cariche di altre animazioni di ingresso'
+
+build:
+  technology: ['CSS', 'IntersectionObserver (fallback)']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: 'Progressive enhancement: `@supports (animation-timeline: view())` per il percorso nativo zero-JS, IntersectionObserver come fallback su motori che non lo supportano ancora.'
+
+knowledge:
+  origin: 'Tecnica di scroll-reveal diffusa nel web design editoriale dalla seconda metà degli anni 2010, poi in parte standardizzata nel 2024 con le CSS Scroll-Driven Animations (view-timeline).'
+  popularizedBy:
+    - 'Siti editoriali e portfolio fotografici'
+    - 'Template systems come Cargo e Squarespace'
+  alternatives:
+    - 'Fade-in semplice, solo opacità, senza blur'
+    - 'Reveal a righe di testo (typographic line reveal) per contenuti tipografici'
+  resources:
+    - title: 'How to Make a Scroll-Triggered Animation With Basic JavaScript'
+      url: 'https://css-tricks.com/scroll-triggered-animation-vanilla-javascript/'
+      type: 'article'
+    - title: 'CSS scroll-driven animations — MDN'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Scroll-driven_animations'
+      type: 'doc'
+
+explore:
+  relatedEffects: []
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Il blur reveal funziona perché imita la messa a
+  fuoco fotografica: è probabilmente l'unico effetto scroll-based che un
+  fotografo riconosce come "proprio", non preso in prestito dal web design.
+  Usarlo con moderazione — oltre 3-4 reveal per pagina smette di significare
+  qualcosa e diventa un tic visivo.
+
+preview:
+  kind: 'css'
+  lite: 'blur-reveal'
+  module: 'src/previews/blur-reveal.ts'
+
+addedAt: '2026-07-08'
+status: 'draft'
+---

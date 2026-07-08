@@ -1,0 +1,70 @@
+---
+title: 'Hover Image Reveal'
+category: 'interactions'
+dna: ['Editorial', 'Kinetic', 'Snappy', 'Dramatic', 'Sharp']
+summary: 'Il titolo del link resta fermo; al passaggio del mouse un''anteprima segue il cursore con un ingresso rapido e deciso.'
+
+overview:
+  description: |
+    Una lista di link puramente testuale (titoli di progetti, voci di un
+    indice) resta silenziosa finché il cursore non entra in una riga: a quel
+    punto un'unica immagine fluttuante compare vicino al puntatore e lo segue
+    finché il mouse resta sulla riga. Il testo non si muove mai — è l'immagine
+    a comparire, non la riga a reagire.
+
+    L'implementazione riusa un solo elemento immagine per l'intera lista
+    (riposizionato e ri-sorgente ad ogni hover), invece di un'immagine per
+    riga: tiene basso il costo DOM e rende l'entrata sempre coerente, a
+    prescindere da quale riga la genera.
+  bestFor:
+    - 'Elenchi di progetti o case study puramente testuali'
+    - 'Indici editoriali con molte voci e poco spazio per le miniature'
+    - 'Pagine dove il testo deve restare protagonista fino all''hover'
+  avoid:
+    - 'Interfacce touch-only, dove non esiste un vero hover'
+    - 'Liste già corredate di miniature statiche (l''effetto diventa ridondante)'
+    - 'Contenuti visivamente densi, dove un''immagine fluttuante compete con il resto'
+
+build:
+  technology: ['JavaScript', 'GSAP']
+  libraries:
+    - name: 'GSAP'
+      url: 'https://gsap.com/'
+  difficulty: 2
+  performance: 'light'
+  notes: 'Un solo nodo immagine condiviso, spostato con `gsap.quickTo()` per interpolare la posizione del cursore senza ricreare tween ad ogni movimento.'
+
+knowledge:
+  origin: 'Pattern diffuso nei siti di studio creativi e portfolio dalla metà degli anni 2010, spesso descritto come "image trail" o "link preview" hover.'
+  popularizedBy:
+    - 'Siti di studio creativi e portfolio fotografici'
+    - 'Tutorial e demo Codrops per liste di progetti'
+  alternatives:
+    - 'Thumbnail statica sempre visibile accanto alla riga'
+    - 'Magnetic Cursor, dove è il cursore stesso a portare l''anteprima'
+  resources:
+    - title: 'Image Reveal Hover Effects'
+      url: 'https://tympanus.net/codrops/2018/11/27/image-reveal-hover-effects/'
+      type: 'article'
+    - title: 'GSAP — documentazione ufficiale'
+      url: 'https://gsap.com/docs/v3/'
+      type: 'doc'
+
+explore:
+  relatedEffects: []
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Funziona quando la lista è il contenuto — poche
+  parole, molte righe: l'immagine premia la lettura invece di distrarla. Su
+  una lista già affollata di testo diventa un ansiolitico visivo mancato:
+  meglio allora una preview statica.
+
+preview:
+  kind: 'gsap'
+  lite: 'hover-image-reveal'
+  module: 'src/previews/hover-image-reveal.ts'
+
+addedAt: '2026-07-08'
+status: 'draft'
+---

@@ -1,0 +1,52 @@
+---
+// Pagina di validazione build-time (TASK_004): non fa parte del prodotto,
+// esiste solo perché la sua build renderizzata ha accesso a `astro:content`
+// (a differenza di astro.config.mjs) e può quindi far fallire `astro build`
+// con un messaggio chiaro se un id referenziato non esiste. Rimossa dalla
+// build di produzione — vedi astro.config.mjs, come /styleguide.
+import { getCollection } from 'astro:content';
+
+const effects = await getCollection('effects');
+const components = await getCollection('catalog-components');
+const effectIds = new Set(effects.map((entry) => entry.id));
+const componentIds = new Set(components.map((entry) => entry.id));
+
+function refId(ref: string | { id: string }): string {
+  return typeof ref === 'string' ? ref : ref.id;
+}
+
+const errors: string[] = [];
+for (const entry of [...effects, ...components]) {
+  for (const ref of entry.data.explore.relatedEffects) {
+    const id = refId(ref);
+    if (!effectIds.has(id)) {
+      errors.push(
+        `${entry.collection}/${entry.id}: explore.relatedEffects referenzia un id inesistente in "effects": "${id}".`,
+      );
+    }
+  }
+  for (const ref of entry.data.explore.relatedComponents) {
+    const id = refId(ref);
+    if (!componentIds.has(id)) {
+      errors.push(
+        `${entry.collection}/${entry.id}: explore.relatedComponents referenzia un id inesistente in "catalog-components": "${id}".`,
+      );
+    }
+  }
+}
+
+if (errors.length > 0) {
+  throw new Error(`Riferimenti non validi nelle Content Collections:\n${errors.join('\n')}`);
+}
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>Validazione contenuti</title>
+  </head>
+  <body>
+    <p>Riferimenti validati: nessun errore.</p>
+  </body>
+</html>

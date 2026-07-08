@@ -1,14 +1,21 @@
-<!-- Placeholder TASK_003: nessun logomark è definito in VISUAL_DNA.md/DESIGN_SYSTEM.md.
-     Solo i due colori non negoziabili (--color-bg, --color-ink), nessuna forma inventata.
-     Da sostituire quando un mark reale sarà specificato. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<!-- Favicon, decisione curatore 2026-07-08: monogramma tipografico "IA",
+     Geist peso 550, colore ink su fondo bg (vedi tokens.css), nessun altro elemento grafico.
+     Font sottoinsieme ai soli glifi I/A e incorporato: la favicon è un asset standalone,
+     non ha accesso a public/fonts/ come il resto della pagina. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      @font-face {
+        font-family: 'Geist Favicon';
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAJ0ABAAAAAABSQAAAIdAAHMzQAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbIBwqBmA/U1RBVDYAPBEICkxYATYCJAMMCwgABCAFg1QHIAwHGxIEYC4G7KZjCCkaU4zfncZjTY1SPD41ZvE8tcS9v7cpvcgIWV1clZnYJktnPBodDcIhUSgwEoTDcj+Ne98N4rc03x9SWWmrZIpQYzVm/0sAWOv+L+znfHRT/1tTAzmMJOQ1LfGAowyfOLE1NcIFpOkNc7nUHtpYWYGgHxBRRAS95m1AhzZPBIZUaAGCXpsYegRkE7dFvA1LsmZQS7yHpp/yuQDgqCHJBYhiAOjxG5wfmz3waI+z+f8fdRcNAIEyUd6xbEREt4JxCOt6HusNjICru2IH0SBFI0roAAEFDcb1Csb12QY6VVHscbaISbY/2isIEGkZQjSgEw2GMAVABRTp7u0bzY9mR2JjkfRoarR/tG+2fftSxru29Q0Vlm7KhX8+voNLCPn1u3IaPMtPav4N9fZ+wZ9vtTAAf+8GJK3C8DCpsoFOBYRH5T2XtHCRveZhAzQlAYxyYzbrwhAaT6bk9AsAqIJen/RKHQY+gAGi1wcUg75CY8c5VLM+UIcawJ3MigmB/kgwjTW0QTcSD5jt2HViX1NdA0YgIiAiQRDRUEVgV9V0QJ81YN+OlqoyjMCoC2vYse8AAUMDhu06oMLHV9eENXSV8JTt2MJ3qGpfWVUHX93iKlfNjm0Y0/iOIVV1XR1F+4R4FAQE1GJCzDzU8jpuepQVAo7h/ahpWhCcrnoOxb13fZATVtTRVBayY0vRtl6gHRGUv+fqEw==) format('woff2');
+        font-weight: 550;
+      }
+      text {
+        font-family: 'Geist Favicon', sans-serif;
+        font-weight: 550;
+      }
+    </style>
+  </defs>
   <rect width="32" height="32" fill="#F7F6F3" />
-  <text
-    x="16"
-    y="23"
-    text-anchor="middle"
-    font-family="system-ui, sans-serif"
-    font-size="20"
-    font-weight="600"
-    fill="#1E1B1C">A</text>
+  <text x="16" y="22" text-anchor="middle" font-size="17" letter-spacing="-0.3" fill="#1E1B1C">IA</text>
 </svg>

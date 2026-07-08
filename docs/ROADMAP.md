@@ -19,8 +19,18 @@ Principio: **ogni fase è un prodotto completo e rilasciabile.** Nessuna fase in
 | M6 — Contenuto | 15–20 effetti completi (bozze Claude → revisione curatore) | TASK_009 |
 | M7 — Qualità | Accessibilità, performance, QA cross-device, deploy Vercel | TASK_010 |
 
-### Piano contenuti V1 (15–20 voci)
-Distribuzione proposta: 6 Interactions, 4 Motion, 4 Visual Effects, 4–6 Components. Criterio di selezione: effetti realmente usabili in portfolio fotografici, non curiosità tecniche. Ogni voce esce solo con Insight revisionato dal curatore — **una voce senza Insight personale non si pubblica.**
+### Piano contenuti V1 (18 voci — approvate dal curatore il 2026-07-08)
+Criterio di selezione: effetti realmente usabili in portfolio fotografici, non curiosità tecniche. Ogni voce esce solo con Insight revisionato dal curatore — **una voce senza Insight personale non si pubblica.**
+
+| Categoria | Voci (4) |
+|---|---|
+| Interactions | Hover Image Reveal · Magnetic Cursor · Custom Cursor States · Link Underline Reveal |
+| Motion | Blur Reveal · Line Reveal Typography · Smooth Scroll · Page Transition Cover |
+| Visual Effects | Film Grain · WebGL Displacement Hover · Depth Parallax · Glass Blur Layers |
+
+| Categoria | Voci (6) |
+|---|---|
+| Components | Magazine Grid · Lightbox · Horizontal Gallery · Sticky Hero · Fullscreen Menu Overlay · Editorial Footer |
 
 ### Criteri di uscita V1
 - Lighthouse ≥ 90 (Performance, mobile) su Home e Category.
