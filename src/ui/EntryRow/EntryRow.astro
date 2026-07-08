@@ -1,0 +1,23 @@
+---
+// EntryRow — riga effetto: titolo + 2 termini DNA (COMPONENT_RULES.md).
+import styles from './EntryRow.module.css';
+
+interface Props {
+  title: string;
+  category: string;
+  dna: string[];
+  href: string;
+}
+
+const { title, category, dna, href } = Astro.props;
+---
+
+<li class={styles.item}>
+  <a href={href} class={styles.row}>
+    <span class={styles.title}>{title}</span>
+    <span class={styles.meta}>
+      <span class={`${styles.category} text-small text-muted`}>{category}</span>
+      <span class={`${styles.dna} text-meta`}>{dna.slice(0, 2).join(' · ')}</span>
+    </span>
+  </a>
+</li>

@@ -1,0 +1,19 @@
+.input {
+  width: 100%;
+  font: inherit;
+  font-size: var(--text-body);
+  color: var(--color-ink);
+  background: none;
+  border: var(--border-thin);
+  border-radius: var(--radius-s);
+  padding: var(--space-2) var(--space-3);
+}
+
+.input::placeholder {
+  color: var(--color-ink-60);
+}
+
+.input:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

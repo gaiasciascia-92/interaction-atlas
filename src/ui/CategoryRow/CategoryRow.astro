@@ -1,0 +1,24 @@
+---
+// CategoryRow — riga dell'indice Home (WIREFRAMES.md §1): nome + conteggio.
+// data-category è letto dallo script della Home per pilotare PreviewLite
+// in hover/focus; su mobile la stessa riga mostra una thumbnail statica
+// 64×40 al posto della preview (niente hover su touch).
+import styles from './CategoryRow.module.css';
+
+interface Props {
+  name: string;
+  count: number;
+  href: string;
+  category: string;
+}
+
+const { name, count, href, category } = Astro.props;
+---
+
+<li class={styles.item}>
+  <a href={href} class={styles.row} data-category={category}>
+    <span class={styles.name}>{name}</span>
+    <span class={styles.thumb} aria-hidden="true"></span>
+    <span class={`${styles.count} text-meta`}>{count}</span>
+  </a>
+</li>

@@ -1,0 +1,14 @@
+---
+// SearchBar — variante incassata della ricerca (COMPONENT_RULES.md).
+// TASK_005: presente ma disabilitata, stesso trattamento del bottone
+// "Cerca ⌘K" in AppNav — non funzionante finché TASK_008 non ne fa un'isola.
+import styles from './SearchBar.module.css';
+---
+
+<input
+  type="text"
+  class={styles.input}
+  placeholder="Cerca un effetto, un componente, una sensazione…"
+  disabled
+  aria-label="Cerca (disponibile a breve)"
+/>

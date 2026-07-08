@@ -1,26 +1,247 @@
 ---
-// Placeholder TASK_001 — la Home reale arriva con TASK_005.
-// Da TASK_003 usa il telaio: BaseLayout (SkipLink/AppNav/AppFooter fornisce già <main>) + PageShell.
+// Home — WIREFRAMES.md §1, TASK_005.
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageShell from '../ui/PageShell/PageShell.astro';
+import SectionLabel from '../ui/SectionLabel/SectionLabel.astro';
+import SearchBar from '../ui/SearchBar/SearchBar.astro';
+import CategoryRow from '../ui/CategoryRow/CategoryRow.astro';
+import PreviewLite from '../ui/PreviewLite/PreviewLite.astro';
+import EntryRow from '../ui/EntryRow/EntryRow.astro';
+import { publishedOrAll } from '../lib/content';
+
+const effects = await getCollection('effects');
+const components = await getCollection('catalog-components');
+
+// Conteggi/"Aggiunti di recente": solo voci published; se una collection non
+// ne ha ancora nessuna (oggi: tutte draft), si mostrano le voci esistenti
+// invece di zero/lista vuota — interpretazione conservativa, annotata in
+// docs/CHANGELOG.md, da rimuovere quando esisteranno voci pubblicate.
+const visibleEffects = publishedOrAll(effects);
+const visibleComponents = publishedOrAll(components);
+
+// Decisione F (PROJECT_SPEC.md §12): l'indice V1 elenca sempre le quattro
+// righe, anche a conteggio zero — niente righe Collections/Playground.
+const categoryLabels = {
+  interactions: 'Interactions',
+  motion: 'Motion',
+  'visual-effects': 'Visual Effects',
+  components: 'Components',
+} as const;
+
+const categoryRows = [
+  {
+    slug: 'interactions',
+    name: categoryLabels.interactions,
+    href: '/interactions',
+    count: visibleEffects.filter((e) => e.data.category === 'interactions').length,
+  },
+  {
+    slug: 'motion',
+    name: categoryLabels.motion,
+    href: '/motion',
+    count: visibleEffects.filter((e) => e.data.category === 'motion').length,
+  },
+  {
+    slug: 'visual-effects',
+    name: categoryLabels['visual-effects'],
+    href: '/visual-effects',
+    count: visibleEffects.filter((e) => e.data.category === 'visual-effects').length,
+  },
+  {
+    slug: 'components',
+    name: categoryLabels.components,
+    href: '/components',
+    count: visibleComponents.length,
+  },
+];
+
+const recent = [...visibleEffects, ...visibleComponents]
+  .sort((a, b) => b.data.addedAt.localeCompare(a.data.addedAt))
+  .slice(0, 5);
 ---
 
 <BaseLayout title="Atlas">
   <PageShell>
-    <div class="placeholder">
-      <h1 class="text-display">Interaction Atlas</h1>
+    <div class="hero">
+      <h1 class="text-display">Un atlante di interazioni per portfolio contemporanei.</h1>
       <p class="text-body text-muted">
-        Un atlante di interazioni per portfolio contemporanei. In costruzione — V1, Milestone 2.
+        Cataloga, confronta e scegli l'interazione giusta nel minor tempo possibile.
       </p>
     </div>
+    <div class="searchWrap">
+      <SearchBar />
+    </div>
   </PageShell>
+
+  <PageShell><hr class="hr" /></PageShell>
+
+  <PageShell>
+    <section class="indexSection">
+      <div class="indexHeader">
+        <SectionLabel as="h2">Indice</SectionLabel>
+      </div>
+      <nav class="rowsCol" aria-label="Indice categorie" data-category-rows>
+        <ul class="rows">
+          {categoryRows.map((c) => <CategoryRow name={c.name} count={c.count} href={c.href} category={c.slug} />)}
+        </ul>
+      </nav>
+      <div class="previewCol">
+        <div class="previewStack">
+          {categoryRows.map((c) => <PreviewLite name={c.name} count={c.count} category={c.slug} />)}
+        </div>
+      </div>
+    </section>
+  </PageShell>
+
+  {
+    recent.length > 0 && (
+      <>
+        <PageShell>
+          <hr class="hr" />
+        </PageShell>
+        <PageShell>
+          <section class="recentSection">
+            <SectionLabel as="h2">Aggiunti di recente</SectionLabel>
+            <ul class="recentRows">
+              {recent.map((entry) => (
+                <EntryRow
+                  title={entry.data.title}
+                  category={categoryLabels[entry.data.category]}
+                  dna={entry.data.dna}
+                  href={`/e/${entry.id}`}
+                />
+              ))}
+            </ul>
+          </section>
+        </PageShell>
+      </>
+    )
+  }
 </BaseLayout>
 
+<script>
+  const rowsEl = document.querySelector('[data-category-rows]');
+  const panels = document.querySelectorAll<HTMLElement>('[data-preview-lite]');
+
+  function setActive(category: string) {
+    for (const panel of panels) {
+      const isMatch = panel.dataset.category === category;
+      panel.classList.toggle('is-active', isMatch);
+      if (!isMatch) panel.classList.remove('is-active');
+      panel.classList.remove('is-dimmed');
+    }
+  }
+
+  function dimActive() {
+    for (const panel of panels) {
+      if (panel.classList.contains('is-active')) {
+        panel.classList.remove('is-active');
+        panel.classList.add('is-dimmed');
+      }
+    }
+  }
+
+  if (rowsEl && panels.length > 0) {
+    rowsEl.addEventListener('pointerover', (event) => {
+      const row = (event.target as HTMLElement).closest<HTMLElement>('[data-category]');
+      if (row) setActive(row.dataset.category!);
+    });
+    rowsEl.addEventListener('focusin', (event) => {
+      const row = (event.target as HTMLElement).closest<HTMLElement>('[data-category]');
+      if (row) setActive(row.dataset.category!);
+    });
+    rowsEl.addEventListener('pointerleave', dimActive);
+    rowsEl.addEventListener('focusout', (event) => {
+      const next = (event as FocusEvent).relatedTarget as Node | null;
+      if (!next || !rowsEl.contains(next)) dimActive();
+    });
+  }
+</script>
+
 <style>
-  .placeholder {
+  .hero {
+    grid-column: 1 / 9;
+    display: grid;
+    gap: var(--space-2);
+    padding-block-start: var(--space-12);
+  }
+
+  .searchWrap {
+    grid-column: 1 / 8;
+    padding-block-start: var(--space-4);
+    padding-block-end: var(--space-12);
+  }
+
+  .hr {
+    grid-column: 1 / -1;
+    border: none;
+    border-top: var(--border-thin);
+  }
+
+  .indexSection {
     grid-column: 1 / -1;
     display: grid;
-    gap: var(--space-3);
-    padding-block: var(--space-16);
+    grid-template-columns: subgrid;
+    padding-block: var(--space-8);
+  }
+
+  .indexHeader {
+    grid-column: 1 / 8;
+    grid-row: 1;
+    padding-block-end: var(--space-2);
+  }
+
+  .rowsCol {
+    grid-column: 1 / 8;
+    grid-row: 2;
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+  }
+
+  .previewCol {
+    grid-column: 8 / 13;
+    grid-row: 1 / 3;
+  }
+
+  .previewStack {
+    position: sticky;
+    top: calc(var(--space-8) + var(--space-2));
+    aspect-ratio: 4 / 3;
+  }
+
+  .recentSection {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  .recentRows {
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 768px) {
+    .hero,
+    .searchWrap {
+      grid-column: 1 / -1;
+    }
+
+    .indexSection {
+      grid-template-columns: 1fr;
+    }
+
+    .rowsCol,
+    .previewCol {
+      grid-column: 1 / -1;
+    }
+
+    .previewCol {
+      display: none;
+    }
   }
 </style>

@@ -1,0 +1,38 @@
+.item {
+  list-style: none;
+}
+
+.item + .item {
+  border-top: var(--border-thin);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: var(--space-3);
+  padding-block: var(--space-2);
+}
+
+.title {
+  font-size: var(--text-body);
+  flex: 1 1 auto;
+  min-width: 50%;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.category {
+  flex-shrink: 0;
+}
+
+.dna {
+  flex-shrink: 0;
+  text-align: right;
+}

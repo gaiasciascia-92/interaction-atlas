@@ -1,0 +1,47 @@
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: var(--radius-m);
+  opacity: 0;
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.panel:global(.is-active) {
+  opacity: 1;
+  box-shadow: var(--glow-subtle);
+}
+
+.panel:global(.is-dimmed) {
+  opacity: 0.6;
+}
+
+.swatch {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-hairline), var(--color-ink-40));
+}
+
+.caption {
+  position: relative;
+  padding: var(--space-3);
+}
+
+.name {
+  color: var(--color-ink);
+}
+
+.count {
+  color: var(--color-ink-60);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}

@@ -1,0 +1,40 @@
+.item {
+  list-style: none;
+}
+
+.item + .item {
+  border-top: var(--border-thin);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
+}
+
+.name {
+  font-size: var(--text-body);
+  flex: 1 1 auto;
+}
+
+.count {
+  color: var(--color-ink-60);
+  flex-shrink: 0;
+}
+
+.thumb {
+  display: none;
+  width: 64px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--radius-s);
+  background: linear-gradient(135deg, var(--color-hairline), var(--color-ink-40));
+}
+
+/* Mobile (WIREFRAMES.md §1): thumbnail statica al posto della preview hover, assente su touch. */
+@media (max-width: 768px) {
+  .thumb {
+    display: block;
+  }
+}
