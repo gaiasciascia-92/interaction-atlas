@@ -1,0 +1,27 @@
+.footer {
+  background: var(--color-bg);
+}
+
+.dividerRow {
+  grid-column: 1 / -1;
+}
+
+.row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--space-8);
+  padding-block: var(--space-3);
+}
+
+.meta {
+  font-size: var(--text-small);
+  color: var(--color-ink-60);
+}
+
+.contact {
+  font-size: var(--text-small);
+  color: var(--color-ink-60);
+}

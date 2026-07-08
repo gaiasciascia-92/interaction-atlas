@@ -1,0 +1,5 @@
+.divider {
+  width: 100%;
+  border: none;
+  border-top: var(--border-thin);
+}

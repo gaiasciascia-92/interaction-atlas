@@ -1,25 +1,26 @@
 ---
 // Placeholder TASK_001 — la Home reale arriva con TASK_005.
+// Da TASK_003 usa il telaio: BaseLayout (SkipLink/AppNav/AppFooter fornisce già <main>) + PageShell.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../ui/PageShell/PageShell.astro';
 ---
 
 <BaseLayout title="Atlas">
-  <main class="placeholder">
-    <h1 class="text-display">Interaction Atlas</h1>
-    <p class="text-body text-muted">
-      Un atlante di interazioni per portfolio contemporanei. In costruzione — V1, Milestone 1.
-    </p>
-  </main>
+  <PageShell>
+    <div class="placeholder">
+      <h1 class="text-display">Interaction Atlas</h1>
+      <p class="text-body text-muted">
+        Un atlante di interazioni per portfolio contemporanei. In costruzione — V1, Milestone 2.
+      </p>
+    </div>
+  </PageShell>
 </BaseLayout>
 
 <style>
   .placeholder {
-    min-height: 100svh;
-    max-width: var(--max-width);
-    margin-inline: auto;
-    padding: var(--space-12) var(--page-margin);
+    grid-column: 1 / -1;
     display: grid;
-    align-content: center;
     gap: var(--space-3);
+    padding-block: var(--space-16);
   }
 </style>

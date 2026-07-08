@@ -1,0 +1,10 @@
+---
+// PageShell — max-width 1500, griglia 12 colonne, margini responsivi.
+// Unico posto dove vive il container di pagina (DESIGN_SYSTEM.md §1);
+// i figli si posizionano con grid-column sulla griglia che espone.
+import styles from './PageShell.module.css';
+---
+
+<div class={styles.shell}>
+  <slot />
+</div>

@@ -1,18 +1,26 @@
 ---
-// BaseLayout minimale (TASK_001/002).
-// La versione completa con AppNav/AppFooter/SkipLink arriva con TASK_003.
+// BaseLayout — telaio completo (TASK_003): SkipLink, AppNav, AppFooter.
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/typography.css';
+import SkipLink from '../ui/SkipLink/SkipLink.astro';
+import AppNav from '../ui/AppNav/AppNav.astro';
+import AppFooter from '../ui/AppFooter/AppFooter.astro';
 
 interface Props {
   title: string;
   description?: string;
+  navBack?: { label: string; href: string };
+  navContext?: string;
 }
 
-const { title, description = 'Un atlante di interazioni per portfolio contemporanei.' } =
-  Astro.props;
+const {
+  title,
+  description = 'Un atlante di interazioni per portfolio contemporanei.',
+  navBack,
+  navContext,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -24,6 +32,7 @@ const { title, description = 'Un atlante di interazioni per portfolio contempora
     <meta name="description" content={description} />
     <meta property="og:title" content={`${title} — Interaction Atlas`} />
     <meta property="og:description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link
       rel="preload"
       href="/fonts/Geist-Variable.woff2"
@@ -33,6 +42,11 @@ const { title, description = 'Un atlante di interazioni per portfolio contempora
     />
   </head>
   <body>
-    <slot />
+    <SkipLink />
+    <AppNav back={navBack} context={navContext} />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+    <AppFooter />
   </body>
 </html>

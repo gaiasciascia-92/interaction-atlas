@@ -1,0 +1,13 @@
+---
+// SectionLabel — etichetta maiuscoletta di sezione (OVERVIEW, BUILD…).
+// "as" sceglie il livello di intestazione semantico corretto per il contesto.
+import styles from './SectionLabel.module.css';
+
+interface Props {
+  as?: 'h2' | 'h3' | 'p';
+}
+
+const { as: Tag = 'h2' }: Props = Astro.props;
+---
+
+<Tag class={styles.label}><slot /></Tag>

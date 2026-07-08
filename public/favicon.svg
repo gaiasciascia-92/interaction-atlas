@@ -1,0 +1,14 @@
+<!-- Placeholder TASK_003: nessun logomark è definito in VISUAL_DNA.md/DESIGN_SYSTEM.md.
+     Solo i due colori non negoziabili (--color-bg, --color-ink), nessuna forma inventata.
+     Da sostituire quando un mark reale sarà specificato. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#F7F6F3" />
+  <text
+    x="16"
+    y="23"
+    text-anchor="middle"
+    font-family="system-ui, sans-serif"
+    font-size="20"
+    font-weight="600"
+    fill="#1E1B1C">A</text>
+</svg>

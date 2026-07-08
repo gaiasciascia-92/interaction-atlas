@@ -1,0 +1,35 @@
+---
+// AppFooter — footer minimo: nome, anno, contatto (COMPONENT_RULES.md).
+// Nessun documento di progetto specifica un contatto reale: il prop
+// contactLabel/contactHref resta inespresso finché il curatore non lo
+// fornisce (vedi CHANGELOG.md), per non spedire un dato inventato.
+import PageShell from '../PageShell/PageShell.astro';
+import Divider from '../Divider/Divider.astro';
+import styles from './AppFooter.module.css';
+
+interface Props {
+  contactLabel?: string;
+  contactHref?: string;
+}
+
+const { contactLabel, contactHref } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class={styles.footer}>
+  <PageShell>
+    <div class={styles.dividerRow}>
+      <Divider />
+    </div>
+    <div class={styles.row}>
+      <p class={styles.meta}>Interaction Atlas · {year}</p>
+      {
+        contactLabel && contactHref && (
+          <a href={contactHref} class={styles.contact}>
+            {contactLabel}
+          </a>
+        )
+      }
+    </div>
+  </PageShell>
+</footer>

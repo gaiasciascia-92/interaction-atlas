@@ -1,0 +1,43 @@
+---
+// AppNav — nav superiore persistente (COMPONENT_RULES.md).
+// V1 non ha un elenco di link da collassare in un menu mobile (le sezioni si
+// raggiungono dalla Home, non dalla nav): "variante compatta" è quindi
+// risolta solo via CSS responsive, senza isola JS — la più conservativa
+// delle letture di TASK_003 dato che non c'è nulla da idratare.
+import PageShell from '../PageShell/PageShell.astro';
+import Divider from '../Divider/Divider.astro';
+import styles from './AppNav.module.css';
+
+interface Props {
+  back?: { label: string; href: string };
+  context?: string;
+}
+
+const { back, context } = Astro.props;
+---
+
+<nav class={styles.nav} aria-label="Principale">
+  <PageShell>
+    <div class={styles.row}>
+      <a href="/" class={styles.brand}>Interaction Atlas</a>
+      {
+        (back || context) && (
+          <div class={styles.contextGroup}>
+            {back && (
+              <a href={back.href} class={styles.back}>
+                ← {back.label}
+              </a>
+            )}
+            {context && <span class={styles.context}>{context}</span>}
+          </div>
+        )
+      }
+      <button type="button" class={styles.search} disabled>
+        Cerca <span class={styles.shortcut}>⌘K</span>
+      </button>
+    </div>
+    <div class={styles.dividerRow}>
+      <Divider />
+    </div>
+  </PageShell>
+</nav>
