@@ -1,0 +1,84 @@
+/* ============================================================
+   Interaction Atlas — Base (TASK_002)
+   Reset minimale + fondamenta. Nessun valore fuori dai token.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  color-scheme: light; /* decisione E: niente dark mode fino a dopo V3 */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--color-divider);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--duration-instant) var(--ease-out);
+}
+
+a:hover {
+  text-decoration-color: var(--color-primary);
+}
+
+/* Selezione testo — Silent UI: presente, sottovoce */
+::selection {
+  background: var(--color-primary-soft);
+  color: var(--color-ink);
+}
+
+/* Focus visibile globale (DESIGN_SYSTEM.md §6) — mai rimosso senza sostituto */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}
+
+/* Divider editoriale di default */
+hr {
+  border: none;
+  border-top: var(--border-thin);
+}
+
+/* Reduced motion: nessuna animazione residua del telaio */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important; /* token-guard: allow — kill-switch a11y, non è una durata di design */
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

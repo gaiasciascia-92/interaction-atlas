@@ -1,0 +1,256 @@
+---
+// /styleguide — strumento di verifica visiva (TASK_002).
+// Solo sviluppo: rimossa dalla build di produzione (vedi astro.config.mjs).
+// Mostra i token per NOME: i valori vivono solo in tokens.css.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const colors = [
+  { token: '--color-bg', note: 'Warm White — fondo unico', contrast: '—' },
+  { token: '--color-ink', note: 'testo primario', contrast: '14.9:1 su bg' },
+  { token: '--color-ink-60', note: 'testo attenuato', contrast: '~7.4:1 su bg' },
+  { token: '--color-primary', note: 'interazione — testo ≥16px o ≥14px semibold', contrast: '4.6:1 su bg' },
+  { token: '--color-warm', note: 'MAI testo — solo marker/grafica', contrast: '1.9:1 su bg' },
+  { token: '--color-accent', note: 'MAI testo — max 1 occorrenza per viewport', contrast: '2.5:1 su bg' },
+];
+
+const spaces = ['05', '1', '2', '3', '4', '6', '8', '12', '16'];
+
+const durations = [
+  { token: '--duration-instant', use: 'hover, focus' },
+  { token: '--duration-fast', use: 'micro-transizioni' },
+  { token: '--duration-base', use: 'transizioni standard' },
+  { token: '--duration-page', use: 'voltapagina preview' },
+];
+---
+
+<BaseLayout title="Styleguide" description="Verifica visiva dei design token — solo sviluppo.">
+  <main class="page">
+    <header>
+      <p class="text-label">Strumento di sviluppo</p>
+      <h1 class="text-h1">Styleguide</h1>
+      <p class="text-body text-muted">
+        Verifica visiva 1:1 di <code class="text-meta">docs/DESIGN_TOKENS.md</code>. Questa pagina
+        non esiste in produzione.
+      </p>
+    </header>
+
+    <hr />
+
+    <section>
+      <h2 class="text-label">Tipografia</h2>
+      <p class="text-display">Display — Atlante</p>
+      <p class="text-h1">H1 — Un atlante di interazioni</p>
+      <p class="text-h2">H2 — Category Page</p>
+      <p class="text-h3">H3 — Il voltapagina orizzontale</p>
+      <p class="text-body">
+        Body — L'interfaccia non compete mai con il contenuto. La preview degli effetti è il vero
+        protagonista, e la tipografia è il principale strumento di gerarchia: prima corpo, peso e
+        spazio; il colore è l'ultima risorsa.
+      </p>
+      <p class="text-small text-muted">Small — testo secondario e note.</p>
+      <p class="text-caption text-muted">Caption — didascalie.</p>
+      <p class="text-label">Label — Overview / Build / Knowledge</p>
+      <p class="text-meta">Meta (Geist Mono) — GSAP · difficulty 2/5 · light</p>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="text-label">Colore</h2>
+      <ul class="swatches">
+        {
+          colors.map((c) => (
+            <li>
+              <span class="swatch" style={`background: var(${c.token})`} />
+              <span class="text-meta">{c.token}</span>
+              <span class="text-small text-muted">{c.note}</span>
+              <span class="text-meta">{c.contrast}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="text-label">Spaziatura — base 8px</h2>
+      <ul class="spaces">
+        {
+          spaces.map((s) => (
+            <li>
+              <span class="text-meta">--space-{s}</span>
+              <span class="bar" style={`width: var(--space-${s})`} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="text-label">Superfici</h2>
+      <div class="surfaces">
+        <div class="surface-preview">
+          <p class="text-small text-muted">radius-m + glow-subtle (preview attiva)</p>
+        </div>
+        <div class="surface-float">
+          <p class="text-small text-muted">radius-s + shadow-soft (solo flottanti)</p>
+        </div>
+        <span class="dna-pill text-meta">Editorial</span>
+      </div>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="text-label">Stati interattivi</h2>
+      <ul class="states">
+        <li><a href="#top">Link — hover per la sottolineatura Purple</a></li>
+        <li><button type="button" class="row-demo">Riga — hover: opacità 60 → 100</button></li>
+        <li>
+          <button type="button" class="row-demo is-selected">
+            <span class="marker">▸</span> Riga selezionata — Purple + marker
+          </button>
+        </li>
+        <li><button type="button" class="row-demo" disabled>Disabilitato — opacità 40%</button></li>
+        <li><span class="text-small text-muted">Caricamento preview…</span></li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section>
+      <h2 class="text-label">Motion</h2>
+      <ul class="motion">
+        {
+          durations.map((d) => (
+            <li>
+              <span class="text-meta">{d.token}</span>
+              <span class="text-small text-muted">{d.use}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="text-small text-muted">
+        Con <code class="text-meta">prefers-reduced-motion</code> tutte le durate collassano a
+        ≤160ms (verificare dalle impostazioni di sistema).
+      </p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .page {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding: var(--space-8) var(--page-margin) var(--space-16);
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  section {
+    display: grid;
+    gap: var(--space-2);
+    justify-items: start;
+  }
+
+  .swatches,
+  .spaces,
+  .states,
+  .motion {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-1);
+    width: 100%;
+  }
+
+  .swatches li {
+    display: grid;
+    grid-template-columns: var(--space-4) 220px 1fr 120px;
+    align-items: center;
+    gap: var(--space-2);
+    padding-block: var(--space-05);
+  }
+
+  .swatch {
+    width: var(--space-4);
+    height: var(--space-4);
+    border-radius: var(--radius-s);
+    border: var(--border-thin);
+  }
+
+  .spaces li {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .bar {
+    height: var(--space-1);
+    background: var(--color-primary);
+    border-radius: var(--radius-0);
+  }
+
+  .surfaces {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .surface-preview {
+    padding: var(--space-4);
+    border: var(--border-thin);
+    border-radius: var(--radius-m);
+    box-shadow: var(--glow-subtle);
+  }
+
+  .surface-float {
+    padding: var(--space-4);
+    border-radius: var(--radius-s);
+    box-shadow: var(--shadow-soft);
+    background: var(--color-bg);
+  }
+
+  .dna-pill {
+    padding: var(--space-05) var(--space-2);
+    border: var(--border-thin);
+    border-radius: var(--radius-pill);
+  }
+
+  .row-demo {
+    background: none;
+    border: none;
+    padding: var(--space-1) 0;
+    color: var(--color-ink-60);
+    cursor: pointer;
+    transition: color var(--duration-instant) var(--ease-out);
+  }
+
+  .row-demo:hover {
+    color: var(--color-ink);
+  }
+
+  .row-demo:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .row-demo.is-selected {
+    color: var(--color-primary);
+  }
+
+  .marker {
+    color: var(--color-primary);
+  }
+
+  .motion li {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-2);
+  }
+</style>

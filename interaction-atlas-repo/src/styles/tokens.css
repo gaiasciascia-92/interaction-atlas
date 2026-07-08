@@ -1,0 +1,130 @@
+/* ============================================================
+   Interaction Atlas — Design Tokens
+   Fonte di verità: docs/DESIGN_TOKENS.md (corrispondenza 1:1).
+   Unico file del progetto in cui sono ammessi valori esadecimali,
+   px arbitrari e millisecondi. (DESIGN_TOKENS.md §8)
+   ============================================================ */
+
+:root {
+  /* --- 1. Colore — palette base ------------------------------ */
+  --color-bg: #f7f6f3; /* Warm White — unico fondo di pagina */
+  --color-ink: #1e1b1c; /* Black — testo primario */
+  --color-primary: #5c5d8d; /* Purple — interazione */
+  --color-warm: #ffa630; /* Orange — evidenziazione non testuale */
+  --color-accent: #34b3a9; /* Green — accento raro */
+
+  /* Derivati (sempre per opacità del Black, mai grigi esterni) */
+  --color-ink-80: rgb(30 27 28 / 0.8); /* testo secondario */
+  --color-ink-60: rgb(30 27 28 / 0.6); /* testo attenuato */
+  --color-ink-40: rgb(30 27 28 / 0.4); /* disabilitato, hint */
+  --color-divider: rgb(30 27 28 / 0.1); /* divider 1px */
+  --color-hairline: rgb(30 27 28 / 0.06); /* divider secondario */
+
+  /* Interazione */
+  --color-primary-soft: rgb(92 93 141 / 0.08); /* fondo selezione */
+  --color-focus: var(--color-primary);
+
+  /* --- 2. Spaziatura (base 8px) ------------------------------ */
+  --space-05: 4px; /* solo micro-allineamenti interni */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+  --space-16: 128px; /* respiro tra macro-sezioni editoriali */
+
+  /* --- 3. Tipografia ----------------------------------------- */
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+  /* Scala desktop; varianti mobile sotto --bp-md (media query in coda) */
+  --text-display: 64px; /* lh 1.05, -0.02em, peso 550 */
+  --text-h1: 44px; /* lh 1.1,  -0.02em, peso 550 */
+  --text-h2: 30px; /* lh 1.2,  -0.01em, peso 550 */
+  --text-h3: 21px; /* lh 1.3,   0,      peso 550 */
+  --text-body: 16px; /* lh 1.6 */
+  --text-small: 14px; /* lh 1.5 */
+  --text-caption: 12px; /* lh 1.4 */
+  --text-label: 12px; /* maiuscoletto, +0.08em, peso 500 */
+
+  --measure: 68ch; /* larghezza massima del testo corrente */
+
+  /* --- 4. Raggi, bordi, elevazione --------------------------- */
+  --radius-0: 0; /* elementi editoriali */
+  --radius-s: 6px; /* controlli */
+  --radius-m: 10px; /* contenitore preview */
+  --radius-pill: 999px; /* solo tag DNA */
+
+  --border-thin: 1px solid var(--color-divider);
+
+  /* Unica ombra ammessa — elementi flottanti */
+  --shadow-soft: 0 8px 32px rgb(30 27 28 / 0.1);
+
+  /* Unico glow ammesso — preview attiva */
+  --glow-subtle: 0 0 48px rgb(92 93 141 / 0.1);
+
+  /* --- 5. Motion (uso: docs/MOTION_PRINCIPLES.md) ------------- */
+  --duration-instant: 120ms; /* feedback: hover, focus */
+  --duration-fast: 200ms; /* micro-transizioni UI */
+  --duration-base: 320ms; /* transizioni standard */
+  --duration-page: 560ms; /* voltapagina della preview (atlas) */
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* uscite, entrate UI */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* voltapagina */
+  --ease-linear: linear; /* solo progress/loop */
+
+  /* --- 6. Z-index (cinque livelli, mai un sesto) -------------- */
+  --z-base: 0;
+  --z-preview: 10;
+  --z-nav: 100;
+  --z-search: 200; /* command palette / overlay ricerca */
+  --z-toast: 300;
+
+  /* --- 7. Breakpoint e layout --------------------------------- */
+  /* Nota: le custom property non funzionano dentro le media query;
+     questi valori sono documentazione eseguibile e vanno tenuti
+     allineati a mano con le media query nei fogli di stile. */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --max-width: 1500px;
+
+  --grid-columns: 12;
+  --grid-gutter: 24px;
+  --page-margin: 48px;
+}
+
+/* Margini di pagina responsive (DESIGN_TOKENS.md §7) */
+@media (max-width: 1024px) {
+  :root {
+    --page-margin: 24px;
+  }
+}
+@media (max-width: 480px) {
+  :root {
+    --page-margin: 16px;
+  }
+}
+
+/* Scala tipografica mobile (DESIGN_TOKENS.md §3, sotto --bp-md) */
+@media (max-width: 768px) {
+  :root {
+    --text-display: 40px;
+    --text-h1: 32px;
+    --text-h2: 24px;
+    --text-h3: 19px;
+  }
+}
+
+/* Reduced motion: le durate collassano ≤160ms (TASK_002) */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 120ms;
+    --duration-base: 160ms;
+    --duration-page: 160ms;
+  }
+}
