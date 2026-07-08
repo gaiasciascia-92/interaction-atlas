@@ -1,0 +1,370 @@
+---
+// PreviewPane — isola (COMPONENT_RULES.md): monta/smonta i moduli preview,
+// voltapagina (MOTION_PRINCIPLES.md §3), glow, pause/resume su visibilità.
+// È l'UNICO componente autorizzato a importare moduli preview (contratto
+// PreviewModule, COMPONENT_RULES.md).
+//
+// Vincolo PROJECT_SPEC.md §7: il livello "Heavy" (WebGL/Three.js) è
+// "Solo Effect Page" — sulla Category Page un effetto preview.kind
+// "webgl" NON monta il modulo reale: mostra uno stato statico neutro con
+// link alla Effect Page (TASK_007). Vedi CHANGELOG.md.
+import styles from './PreviewPane.module.css';
+
+interface Entry {
+  slug: string;
+  title: string;
+  summary: string;
+  href: string;
+  preview: { kind: 'css' | 'gsap' | 'webgl'; module: string };
+}
+
+interface Props {
+  entries: Entry[];
+  categoryKey: string;
+  initialSlug: string;
+}
+
+const { entries, categoryKey, initialSlug } = Astro.props;
+const initialEntry = entries.find((e) => e.slug === initialSlug) ?? entries[0];
+const initialIndex = entries.findIndex((e) => e.slug === initialEntry?.slug);
+
+// Evita che un valore nei contenuti possa chiudere anticipatamente il tag
+// <script> (nessun contenuto utente qui, ma resta corretto farlo).
+const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
+---
+
+{
+  initialEntry && (
+    <div class={styles.pane} data-preview-pane data-category-key={categoryKey} data-initial-slug={initialSlug}>
+      <div class={styles.stage} data-stage aria-live="polite">
+        <div class={styles.startOverlay} data-start-overlay hidden>
+          <button type="button" class={styles.startButton} data-start-button>
+            Avvia preview
+          </button>
+        </div>
+      </div>
+      <div class={styles.meta}>
+        <p class={`${styles.title} text-h3`} data-effect-title>
+          {initialEntry.title}
+        </p>
+        <p class={`${styles.summary} text-body text-muted`} data-effect-summary>
+          {initialEntry.summary}
+        </p>
+        <a href={initialEntry.href} class={styles.openLink} data-open-link>
+          Apri scheda →
+        </a>
+      </div>
+      <div class={styles.prevNext}>
+        <button type="button" class={styles.navButton} data-prev-button disabled={initialIndex <= 0}>
+          ← precedente
+        </button>
+        <button
+          type="button"
+          class={styles.navButton}
+          data-next-button
+          disabled={initialIndex < 0 || initialIndex >= entries.length - 1}
+        >
+          successivo →
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<script type="application/json" is:inline data-entries-json set:html={entriesJson} />
+
+<script>
+  import type { PreviewModule } from '../../types/preview';
+  import { getSelectionController } from '../../lib/category-selection';
+
+  interface Entry {
+    slug: string;
+    title: string;
+    summary: string;
+    href: string;
+    preview: { kind: 'css' | 'gsap' | 'webgl'; module: string };
+  }
+
+  interface MountedSlot {
+    entry: Entry;
+    el: HTMLElement;
+    module: PreviewModule | null;
+  }
+
+  const paneEl = document.querySelector<HTMLElement>('[data-preview-pane]');
+  const dataEl = document.querySelector<HTMLScriptElement>('[data-entries-json]');
+  if (paneEl && dataEl) {
+    const entries: Entry[] = JSON.parse(dataEl.textContent ?? '[]');
+    const categoryKey = paneEl.dataset.categoryKey!;
+    const slugs = entries.map((e) => e.slug);
+
+    const stageEl = paneEl.querySelector<HTMLElement>('[data-stage]')!;
+    const startOverlay = paneEl.querySelector<HTMLElement>('[data-start-overlay]')!;
+    const startButton = paneEl.querySelector<HTMLButtonElement>('[data-start-button]')!;
+    const titleEl = paneEl.querySelector<HTMLElement>('[data-effect-title]')!;
+    const summaryEl = paneEl.querySelector<HTMLElement>('[data-effect-summary]')!;
+    const openLinkEl = paneEl.querySelector<HTMLAnchorElement>('[data-open-link]')!;
+    const prevButton = paneEl.querySelector<HTMLButtonElement>('[data-prev-button]')!;
+    const nextButton = paneEl.querySelector<HTMLButtonElement>('[data-next-button]')!;
+
+    const params = new URLSearchParams(location.search);
+    const requestedSlug = params.get('e');
+    const initialSlug =
+      requestedSlug && slugs.includes(requestedSlug) ? requestedSlug : paneEl.dataset.initialSlug!;
+
+    const controller = getSelectionController(categoryKey, slugs, initialSlug);
+
+    // Moduli preview: import() dinamico, uno per src/previews/*.ts
+    // (MOTION_PRINCIPLES.md §4: mai import statico nel telaio).
+    const moduleLoaders = import.meta.glob<{ default: PreviewModule }>('/src/previews/*.ts');
+
+    async function loadModule(modulePath: string): Promise<PreviewModule> {
+      const key = '/' + modulePath.replace(/^\/+/, '');
+      const loader = moduleLoaders[key];
+      if (!loader) throw new Error(`Modulo preview non trovato: ${modulePath}`);
+      const m = await loader();
+      return m.default;
+    }
+
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let reducedMotion = reducedMotionQuery.matches;
+    reducedMotionQuery.addEventListener('change', (e) => {
+      reducedMotion = e.matches;
+    });
+
+    // Assert dev-mode: mai più di una preview Live "attiva" insieme
+    // (criterio TASK_006.md). "Attiva" = montata e non in pausa: il breve
+    // overlap visivo del voltapagina (uscente in dissolvenza, già in pausa)
+    // non conta come una seconda preview attiva — altrimenti il crossfade
+    // stesso descritto in MOTION_PRINCIPLES.md §3 sarebbe irrealizzabile.
+    const activeModules = new Set<PreviewModule>();
+    function markActive(mod: PreviewModule | null) {
+      if (!mod) return;
+      activeModules.add(mod);
+      if (import.meta.env.DEV && activeModules.size > 1) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `[PreviewPane] Più di una preview Live attiva contemporaneamente (${activeModules.size}).`,
+        );
+      }
+    }
+    function markInactive(mod: PreviewModule | null) {
+      if (mod) activeModules.delete(mod);
+    }
+
+    let generation = 0;
+    let current: MountedSlot | null = null;
+    let paneVisible = true;
+    let tabVisible = document.visibilityState === 'visible';
+    let awaitingManualStart = false;
+
+    function isHeavy(entry: Entry): boolean {
+      return entry.preview.kind === 'webgl';
+    }
+
+    function renderFallback(el: HTMLElement) {
+      el.classList.add('is-fallback');
+      const p = document.createElement('p');
+      p.className = 'text-small text-muted';
+      p.textContent =
+        'Anteprima WebGL disponibile nella scheda effetto (un solo contesto WebGL per pagina, PROJECT_SPEC.md §7).';
+      el.replaceChildren(p);
+    }
+
+    async function mountLive(
+      entry: Entry,
+      el: HTMLElement,
+      opts: { reducedMotion: boolean },
+    ): Promise<PreviewModule | null> {
+      if (isHeavy(entry)) {
+        renderFallback(el);
+        return null;
+      }
+      const mod = await loadModule(entry.preview.module);
+      mod.mount(el, opts);
+      return mod;
+    }
+
+    function updateMeta(entry: Entry, index: number) {
+      titleEl.textContent = entry.title;
+      summaryEl.textContent = entry.summary;
+      openLinkEl.href = entry.href;
+      prevButton.disabled = index <= 0;
+      nextButton.disabled = index < 0 || index >= entries.length - 1;
+    }
+
+    function showManualStart(show: boolean) {
+      awaitingManualStart = show;
+      startOverlay.hidden = !show;
+    }
+
+    function applyVisibility() {
+      if (!current?.module) return;
+      const shouldRun = paneVisible && tabVisible && !awaitingManualStart;
+      if (shouldRun) {
+        current.module.resume?.();
+        markActive(current.module);
+      } else {
+        current.module.pause?.();
+        markInactive(current.module);
+      }
+    }
+
+    function retireSlot(slot: MountedSlot) {
+      slot.module?.pause?.(); // ferma subito l'attività: solo la dissolvenza CSS prosegue
+      markInactive(slot.module);
+      setTimeout(() => {
+        slot.module?.destroy();
+        slot.el.remove();
+      }, 200); // durata dell'uscita (MOTION_PRINCIPLES.md §3): a quel punto è già invisibile
+    }
+
+    function transitionTo(index: number, direction: 'next' | 'prev' | null) {
+      const entry = entries[index];
+      if (!entry) return;
+      const myGen = ++generation;
+      const outgoing = current;
+
+      const incoming = document.createElement('div');
+      incoming.className = 'slot';
+      incoming.style.setProperty('--enter-x', direction === 'prev' ? '-6%' : '6%');
+      incoming.dataset.phase = 'entering';
+      stageEl.appendChild(incoming);
+
+      showManualStart(false);
+      const wantsManualStart = reducedMotion;
+
+      if (outgoing) {
+        outgoing.el.style.setProperty('--exit-x', direction === 'prev' ? '6%' : '-6%');
+        outgoing.el.dataset.phase = 'exiting';
+        retireSlot(outgoing);
+      }
+
+      mountLive(entry, incoming, { reducedMotion: wantsManualStart }).then((mod) => {
+        if (myGen !== generation) {
+          // Superata da un input successivo: pulizia immediata, mai un frame mostrato.
+          mod?.destroy();
+          incoming.remove();
+          return;
+        }
+        current = { entry, el: incoming, module: mod };
+        stageEl.classList.add('has-active');
+        requestAnimationFrame(() => {
+          if (myGen !== generation) return;
+          incoming.dataset.phase = 'entered';
+        });
+        updateMeta(entry, index);
+        if (wantsManualStart && mod) showManualStart(true);
+        applyVisibility();
+      });
+    }
+
+    // Primo montaggio: nessuna animazione di voltapagina (non è un cambio).
+    (function mountInitial() {
+      const index = Math.max(0, slugs.indexOf(controller.current!));
+      const entry = entries[index];
+      if (!entry) return;
+      const el = document.createElement('div');
+      el.className = 'slot';
+      el.dataset.phase = 'entered';
+      stageEl.appendChild(el);
+      const wantsManualStart = reducedMotion;
+      mountLive(entry, el, { reducedMotion: wantsManualStart }).then((mod) => {
+        current = { entry, el, module: mod };
+        stageEl.classList.add('has-active');
+        updateMeta(entry, index);
+        if (wantsManualStart && mod) showManualStart(true);
+        applyVisibility();
+      });
+    })();
+
+    startButton.addEventListener('click', () => {
+      if (!current) return;
+      const { entry, el, module } = current;
+      module?.destroy();
+      markInactive(module);
+      showManualStart(false);
+      mountLive(entry, el, { reducedMotion: false }).then((mod) => {
+        current = { entry, el, module: mod };
+        applyVisibility();
+      });
+    });
+
+    controller.subscribe(({ slug, direction }) => {
+      const index = slugs.indexOf(slug);
+      if (index === -1) return;
+      transitionTo(index, direction);
+    });
+
+    prevButton.addEventListener('click', () => controller.prev());
+    nextButton.addEventListener('click', () => controller.next());
+
+    // Pause/resume su visibilità (MOTION_PRINCIPLES.md §4).
+    const intersectionObserver = new IntersectionObserver(
+      (obsEntries) => {
+        for (const obsEntry of obsEntries) paneVisible = obsEntry.isIntersecting;
+        applyVisibility();
+      },
+      { threshold: 0.1 },
+    );
+    intersectionObserver.observe(stageEl);
+
+    document.addEventListener('visibilitychange', () => {
+      tabVisible = document.visibilityState === 'visible';
+      applyVisibility();
+    });
+
+    // Swipe orizzontale sulla preview (mobile, WIREFRAMES.md §1/§2): non deve
+    // mai alterare lo scroll verticale nativo — preventDefault solo dopo
+    // aver confermato un gesto chiaramente orizzontale.
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchDeciding = true;
+    let touchIsHorizontal = false;
+    const SWIPE_THRESHOLD_PX = 40;
+    const SWIPE_DEADZONE_PX = 10;
+
+    stageEl.addEventListener(
+      'touchstart',
+      (event) => {
+        const t = event.touches[0];
+        if (!t) return;
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+        touchDeciding = true;
+        touchIsHorizontal = false;
+      },
+      { passive: true },
+    );
+
+    stageEl.addEventListener(
+      'touchmove',
+      (event) => {
+        const t = event.touches[0];
+        if (!t) return;
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        if (touchDeciding && (Math.abs(dx) > SWIPE_DEADZONE_PX || Math.abs(dy) > SWIPE_DEADZONE_PX)) {
+          touchIsHorizontal = Math.abs(dx) > Math.abs(dy);
+          touchDeciding = false;
+        }
+        if (touchIsHorizontal) event.preventDefault();
+      },
+      { passive: false },
+    );
+
+    stageEl.addEventListener(
+      'touchend',
+      (event) => {
+        if (!touchIsHorizontal) return;
+        const t = event.changedTouches[0];
+        if (!t) return;
+        const dx = t.clientX - touchStartX;
+        if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
+        if (dx < 0) controller.next();
+        else controller.prev();
+      },
+      { passive: true },
+    );
+  }
+</script>

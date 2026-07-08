@@ -9,6 +9,7 @@ import CategoryRow from '../ui/CategoryRow/CategoryRow.astro';
 import PreviewLite from '../ui/PreviewLite/PreviewLite.astro';
 import EntryRow from '../ui/EntryRow/EntryRow.astro';
 import { publishedOrAll } from '../lib/content';
+import { CATEGORY_META, CATEGORY_SLUGS } from '../lib/categories';
 
 const effects = await getCollection('effects');
 const components = await getCollection('catalog-components');
@@ -22,39 +23,15 @@ const visibleComponents = publishedOrAll(components);
 
 // Decisione F (PROJECT_SPEC.md §12): l'indice V1 elenca sempre le quattro
 // righe, anche a conteggio zero — niente righe Collections/Playground.
-const categoryLabels = {
-  interactions: 'Interactions',
-  motion: 'Motion',
-  'visual-effects': 'Visual Effects',
-  components: 'Components',
-} as const;
-
-const categoryRows = [
-  {
-    slug: 'interactions',
-    name: categoryLabels.interactions,
-    href: '/interactions',
-    count: visibleEffects.filter((e) => e.data.category === 'interactions').length,
-  },
-  {
-    slug: 'motion',
-    name: categoryLabels.motion,
-    href: '/motion',
-    count: visibleEffects.filter((e) => e.data.category === 'motion').length,
-  },
-  {
-    slug: 'visual-effects',
-    name: categoryLabels['visual-effects'],
-    href: '/visual-effects',
-    count: visibleEffects.filter((e) => e.data.category === 'visual-effects').length,
-  },
-  {
-    slug: 'components',
-    name: categoryLabels.components,
-    href: '/components',
-    count: visibleComponents.length,
-  },
-];
+const categoryRows = CATEGORY_SLUGS.map((slug) => ({
+  slug,
+  name: CATEGORY_META[slug].label,
+  href: CATEGORY_META[slug].href,
+  count:
+    slug === 'components'
+      ? visibleComponents.length
+      : visibleEffects.filter((e) => e.data.category === slug).length,
+}));
 
 const recent = [...visibleEffects, ...visibleComponents]
   .sort((a, b) => b.data.addedAt.localeCompare(a.data.addedAt))
@@ -107,7 +84,7 @@ const recent = [...visibleEffects, ...visibleComponents]
               {recent.map((entry) => (
                 <EntryRow
                   title={entry.data.title}
-                  category={categoryLabels[entry.data.category]}
+                  category={CATEGORY_META[entry.data.category].label}
                   dna={entry.data.dna}
                   href={`/e/${entry.id}`}
                 />

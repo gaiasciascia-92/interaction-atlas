@@ -28,7 +28,8 @@ const blurReveal: PreviewModule = {
     el.replaceChildren(Object.assign(document.createElement('div'), { className: 'photo' }));
 
     if (opts?.reducedMotion) {
-      el.classList.add(REVEALED_CLASS);
+      // Primo frame (sfocato), nessun reveal automatico — MOTION_PRINCIPLES.md §6:
+      // l'avvio esplicito è responsabilità del contenitore (PreviewPane), non del modulo.
       return;
     }
 

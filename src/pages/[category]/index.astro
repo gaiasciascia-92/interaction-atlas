@@ -1,0 +1,133 @@
+---
+// Category Page — WIREFRAMES.md §2, TASK_006.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageShell from '../../ui/PageShell/PageShell.astro';
+import EntryList from '../../ui/EntryList/EntryList.astro';
+import PreviewPane from '../../ui/PreviewPane/PreviewPane.astro';
+import { publishedOrAll } from '../../lib/content';
+import { CATEGORY_META, CATEGORY_SLUGS, type CategorySlug } from '../../lib/categories';
+
+export async function getStaticPaths() {
+  return CATEGORY_SLUGS.map((slug) => ({ params: { category: slug } }));
+}
+
+const category = Astro.params.category as CategorySlug;
+const meta = CATEGORY_META[category];
+
+// Stesso fallback di Home (docs/CHANGELOG.md): published-only appena ne
+// esiste almeno una, altrimenti tutte le voci esistenti. publishedOrAll è
+// chiamata separatamente per ramo: le due collection hanno tipi distinti,
+// unirle prima avrebbe richiesto un cast che perde i campi specifici.
+const rawEntries =
+  category === 'components'
+    ? publishedOrAll(await getCollection('catalog-components'))
+    : publishedOrAll(await getCollection('effects', (e) => e.data.category === category));
+
+const visible = [...rawEntries].sort((a, b) => b.data.addedAt.localeCompare(a.data.addedAt));
+
+const entries = visible.map((entry) => ({
+  slug: entry.id,
+  title: entry.data.title,
+  summary: entry.data.summary,
+  dna: entry.data.dna,
+  href: `/e/${entry.id}`,
+  preview: { kind: entry.data.preview.kind, module: entry.data.preview.module },
+}));
+
+// Primo effetto preselezionato: l'ultima voce aggiunta (TASK_006.md) — è la
+// prima dopo l'ordinamento per addedAt discendente sopra.
+const initialSlug = entries[0]?.slug ?? '';
+---
+
+<BaseLayout title={meta.label} navBack={{ label: 'Atlas', href: '/' }} navContext={meta.label}>
+  <PageShell>
+    <div class="header">
+      <div class="headerTitle">
+        <h1 class="text-h1">{meta.label}</h1>
+        <span class="count text-meta">{entries.length}</span>
+      </div>
+      <p class="text-body text-muted">{meta.description}</p>
+    </div>
+  </PageShell>
+
+  <PageShell><hr class="hr" /></PageShell>
+
+  <PageShell>
+    {
+      entries.length > 0 ? (
+        <div class="split">
+          <div class="listCol">
+            <EntryList entries={entries} categoryKey={category} initialSlug={initialSlug} />
+          </div>
+          <div class="previewCol">
+            <PreviewPane entries={entries} categoryKey={category} initialSlug={initialSlug} />
+          </div>
+        </div>
+      ) : (
+        <p class="empty text-body text-muted">Nessuna voce pubblicata in questa categoria per ora.</p>
+      )
+    }
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .header {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-8) var(--space-4);
+  }
+
+  .headerTitle {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .count {
+    color: var(--color-ink-60);
+  }
+
+  .hr {
+    grid-column: 1 / -1;
+    border: none;
+    border-top: var(--border-thin);
+  }
+
+  .split {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    padding-block: var(--space-6) var(--space-16);
+    align-items: start;
+  }
+
+  .listCol {
+    grid-column: 1 / 6;
+  }
+
+  .previewCol {
+    grid-column: 6 / 13;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  @media (max-width: 1024px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+
+    .listCol,
+    .previewCol {
+      grid-column: 1 / -1;
+    }
+
+    .previewCol {
+      order: -1;
+    }
+  }
+</style>

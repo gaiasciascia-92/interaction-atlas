@@ -1,0 +1,107 @@
+---
+// EntryList — isola (COMPONENT_RULES.md): selezione via click/tastiera,
+// sync con ?e=slug. Legge i dati completi delle voci da <script
+// id="category-entries-data"> renderizzato dalla pagina (condiviso con
+// PreviewPane, unica fonte per evitare due sorgenti di verità). Le frecce
+// ↑/↓/←/→ sono globali (WIREFRAMES.md §2: "da qualunque punto della
+// pagina"), non serve quindi una tabindex "roving" per riga: l'unico
+// elemento tabbabile di ogni riga è il titolo, un vero link alla Effect
+// Page (click sul titolo → Effect Page; click sul resto della riga →
+// selezione, MOTION_PRINCIPLES.md/WIREFRAMES.md §2).
+import type { CategorySlug } from '../../lib/categories';
+import styles from './EntryList.module.css';
+
+interface Entry {
+  slug: string;
+  title: string;
+  dna: string[];
+  href: string;
+}
+
+interface Props {
+  entries: Entry[];
+  categoryKey: CategorySlug;
+  initialSlug: string;
+}
+
+const { entries, categoryKey, initialSlug } = Astro.props;
+---
+
+<ul class={styles.list} data-entry-list data-category-key={categoryKey} data-initial-slug={initialSlug}>
+  {
+    entries.map((entry) => (
+      <li class={styles.item}>
+        <div class={styles.row} data-select-row data-slug={entry.slug}>
+          <span class={styles.marker} aria-hidden="true">
+            ▸
+          </span>
+          <a href={entry.href} class={styles.title}>
+            {entry.title}
+          </a>
+          <span class={`${styles.dna} text-meta`}>{entry.dna.slice(0, 2).join(' · ')}</span>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<script>
+  import { getSelectionController } from '../../lib/category-selection';
+
+  const listEl = document.querySelector<HTMLElement>('[data-entry-list]');
+  if (listEl) {
+    const categoryKey = listEl.dataset.categoryKey!;
+    const rows = Array.from(listEl.querySelectorAll<HTMLElement>('[data-select-row]'));
+    const slugs = rows.map((row) => row.dataset.slug!);
+
+    const params = new URLSearchParams(location.search);
+    const requestedSlug = params.get('e');
+    const initialSlug =
+      requestedSlug && slugs.includes(requestedSlug) ? requestedSlug : listEl.dataset.initialSlug!;
+
+    const controller = getSelectionController(categoryKey, slugs, initialSlug);
+
+    function applyMarker(slug: string) {
+      for (const row of rows) {
+        const selected = row.dataset.slug === slug;
+        row.classList.toggle('is-selected', selected);
+        row.setAttribute('aria-current', selected ? 'true' : 'false');
+      }
+    }
+
+    function syncUrl(slug: string) {
+      const url = new URL(location.href);
+      url.searchParams.set('e', slug);
+      history.replaceState(history.state, '', url);
+    }
+
+    applyMarker(controller.current!);
+    syncUrl(controller.current!);
+
+    controller.subscribe(({ slug }) => {
+      applyMarker(slug);
+      syncUrl(slug);
+    });
+
+    for (const row of rows) {
+      row.addEventListener('click', (event) => {
+        if ((event.target as HTMLElement).closest('a')) return; // il titolo naviga da solo
+        controller.select(row.dataset.slug!);
+      });
+    }
+
+    const isEditable = (el: Element | null) =>
+      !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT');
+
+    window.addEventListener('keydown', (event) => {
+      if (isEditable(document.activeElement)) return;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        controller.next();
+      } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        controller.prev();
+      }
+    });
+  }
+</script>
