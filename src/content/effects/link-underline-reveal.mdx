@@ -1,0 +1,69 @@
+---
+title: 'Link Underline Reveal'
+category: 'interactions'
+dna: ['Editorial', 'Minimal', 'Snappy', 'Quiet', 'Sharp']
+summary: 'Il link resta senza sottolineatura a riposo; al passaggio del mouse una linea si rivela da un lato, senza aggiungere alcun elemento HTML.'
+
+overview:
+  description: |
+    Un link testuale non ha sottolineatura permanente: appare solo al
+    passaggio del cursore, disegnata da un bordo laterale a zero. La
+    rivelazione parte da un lato (sinistra, destra o centro) e si estende
+    alla larghezza intera del testo in una frazione di secondo, poi si
+    ritira allo stesso modo quando il cursore esce.
+
+    Tecnicamente non serve alcun elemento HTML aggiuntivo: uno
+    pseudo-elemento `::after` parte con `transform: scaleX(0)` e
+    `transform-origin` sul lato scelto, e transizione a `scaleX(1)` su
+    `:hover`/`:focus-visible`. È interamente dichiarativo — nessun
+    listener, nessun calcolo a runtime.
+  bestFor:
+    - 'Indici e liste editoriali dove il testo deve restare protagonista e il link si segnala solo quando serve'
+    - 'Menu di navigazione minimali, dove una sottolineatura permanente sarebbe rumore visivo'
+    - 'Corpo di testo con link inline, per non interrompere la lettura con una sottolineatura sempre accesa'
+  avoid:
+    - 'Link isolati e poco numerosi, dove l''assenza di sottolineatura a riposo può ridurre la scopribilità'
+    - 'Testo giustificato molto stretto, dove la sottolineatura animata può risultare instabile su più righe'
+    - 'Interfacce touch-only, dove non c''è hover: serve comunque un segnale visibile di default'
+
+build:
+  technology: ['CSS']
+  libraries: []
+  difficulty: 1
+  performance: 'light'
+  notes: 'Nessun JavaScript nel meccanismo del reveal: il modulo preview crea solo il markup dimostrativo, l''animazione è interamente :hover/:focus-visible + transition.'
+
+knowledge:
+  origin: 'Tecnica CSS classica, diffusa da sempre nel web design editoriale; la variante con transform: scaleX() e pseudo-elemento si è affermata negli anni 2010 come alternativa performante al vecchio background-position animato.'
+  popularizedBy:
+    - 'Siti editoriali e blog di design system'
+    - 'Articoli di riferimento come quello di Tobias Ahlin sulle sottolineature animate'
+  alternatives:
+    - 'Sottolineatura sempre visibile, più accessibile ma meno silenziosa'
+    - 'Cambio di colore al hover, la variante più semplice e meno caratterizzante'
+  resources:
+    - title: 'Animating Link Underlines'
+      url: 'https://tobiasahlin.com/blog/css-trick-animating-link-underlines/'
+      type: 'article'
+    - title: 'Animating Underlines'
+      url: 'https://css-irl.info/animating-underlines/'
+      type: 'article'
+
+explore:
+  relatedEffects: ['hover-image-reveal']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] È il più economico e il più sottovalutato del
+  catalogo: zero JavaScript, contrasto minimo, eppure segnala con
+  precisione dove porta un link. In una lista editoriale fitta di testo è
+  spesso l'unica interazione che serve davvero.
+
+preview:
+  kind: 'css'
+  lite: 'link-underline-reveal'
+  module: 'src/previews/link-underline-reveal.ts'
+
+addedAt: '2026-07-09'
+status: 'draft'
+---

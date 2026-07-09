@@ -1,0 +1,73 @@
+---
+title: 'Custom Cursor States'
+category: 'interactions'
+dna: ['Refined', 'Bold', 'Kinetic', 'Sharp', 'Subtle']
+summary: 'Il cursore reale sparisce dentro l''area della preview e un elemento su misura lo sostituisce, cambiando forma ed etichetta a seconda di cosa sta sorvolando.'
+
+overview:
+  description: |
+    Il cursore nativo del sistema operativo viene nascosto solo all'interno
+    del contenitore dell'interazione; un piccolo elemento personalizzato lo
+    sostituisce, seguendo il puntatore con un'interpolazione leggera.
+    Passando sopra zone diverse — un'immagine, un'area trascinabile, un
+    testo semplice — il cursore custom cambia dimensione, colore o mostra
+    un'etichetta testuale breve ("Guarda", "Trascina"), comunicando l'azione
+    disponibile senza bisogno di altre spiegazioni visive.
+
+    Tecnicamente il cursore è un elemento posizionato in modo assoluto
+    dentro il contenitore, spostato ad ogni `pointermove` con una
+    trasformazione CSS interpolata da una breve transizione; il cursore
+    nativo del sistema è nascosto con `cursor: none` applicato solo al
+    contenitore, mai al documento — fuori da quell'area il visitatore
+    ritrova il proprio cursore normale, invariato.
+  bestFor:
+    - 'Portfolio con poche interazioni chiave, dove un''unica sostituzione del cursore vale la complessità'
+    - 'Gallerie dove serve distinguere "guarda" da "apri" da "trascina" senza etichette permanenti'
+    - 'Siti con un tono editoriale forte, dove il cursore diventa parte della voce del brand'
+  avoid:
+    - 'Dispositivi touch, dove il cursore non esiste e la sostituzione non ha bersaglio'
+    - 'Pagine con molte zone diverse ravvicinate: il cursore che cambia stato troppo spesso diventa rumore'
+    - 'Moduli e form, dove nascondere il cursore reale rischia di confondere la digitazione'
+
+build:
+  technology: ['CSS', 'JavaScript']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: 'Il cursore custom non usa GSAP: una transition CSS breve sul transform basta per l''inseguimento, e le classi di stato si aggiungono/rimuovono su pointerenter/pointerleave delle singole zone.'
+
+knowledge:
+  origin: 'Tecnica diffusa nei siti di studio creativi dalla metà degli anni 2010, spesso definita "custom cursor" o "cursor states", parallela alla diffusione dei bottoni magnetici.'
+  popularizedBy:
+    - 'Siti di studio creativi e agenzie digitali'
+    - 'Case study su blog tecnici dedicati a interazioni cursore-based'
+  alternatives:
+    - 'Magnetic Cursor, dove a reagire è l''elemento invece del cursore'
+    - 'Cursore nativo con solo cursor: pointer/cursor: grab, meno caratterizzante ma senza rischio di confusione'
+  resources:
+    - title: 'Creating custom mouse cursors with CSS'
+      url: 'https://dev.to/logrocket/creating-custom-mouse-cursors-with-css-368l'
+      type: 'article'
+    - title: 'cursor'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/cursor'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['magnetic-cursor']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] È l'effetto che comunica più cura per
+  centimetro quadrato: un cursore che cambia stato dice "questo è
+  cliccabile, questo si trascina" senza una sola parola scritta. Il rischio
+  è nascondere il vero cursore troppo a lungo prima che l'utente capisca
+  cosa sta succedendo — la transizione di stato deve restare immediata.
+
+preview:
+  kind: 'css'
+  lite: 'custom-cursor-states'
+  module: 'src/previews/custom-cursor-states.ts'
+
+addedAt: '2026-07-09'
+status: 'draft'
+---

@@ -1,0 +1,30 @@
+/* Nomi di classe con prefisso univoco: Astro raggruppa il CSS di tutti i
+   moduli preview raggiungibili da import.meta.glob() nelle pagine che
+   montano PreviewPane, indipendentemente dal lazy-loading a runtime del JS
+   — nomi generici come ".stage" condiviso tra più preview.css entrano
+   quindi nella stessa cascata e possono sovrascriversi a vicenda in modo
+   imprevedibile (verificato: ".stage{display:flex}" di un altro modulo
+   vinceva su ".stage{display:grid}" di un altro ancora). */
+.magnetic-cursor-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.magnetic-cursor-button {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
+  border: var(--border-thin);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  will-change: transform;
+}
+
+.magnetic-cursor-button:hover {
+  border-color: var(--color-primary);
+}

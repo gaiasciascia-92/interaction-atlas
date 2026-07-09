@@ -1,0 +1,63 @@
+/* Nomi di classe con prefisso univoco: vedi commento in magnetic-cursor.css
+   — Astro raggruppa il CSS di tutti i moduli preview nelle pagine che
+   montano PreviewPane, nomi generici condivisi tra più preview.css
+   entrano nella stessa cascata e possono sovrascriversi a vicenda. */
+.custom-cursor-states-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  cursor: none; /* solo dentro lo stage: mai sul documento */
+  overflow: hidden;
+}
+
+.custom-cursor-states-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-60);
+  border-right: var(--border-thin);
+}
+
+.custom-cursor-states-zone:last-child {
+  border-right: none;
+}
+
+.custom-cursor-states-zone:hover {
+  color: var(--color-ink);
+}
+
+.custom-cursor-states-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--space-3);
+  height: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  color: var(--color-bg);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: width 160ms var(--ease-out), height 160ms var(--ease-out), background 160ms var(--ease-out); /* token-guard: allow */
+}
+
+.custom-cursor-states-cursor.is-view {
+  width: var(--space-8);
+  height: var(--space-8);
+  background: var(--color-primary);
+}
+
+.custom-cursor-states-cursor.is-drag {
+  width: var(--space-8);
+  height: var(--space-8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor-states-cursor {
+    transition: none;
+  }
+}

@@ -1,0 +1,49 @@
+/* Nomi di classe con prefisso univoco: vedi commento in magnetic-cursor.css
+   — Astro raggruppa il CSS di tutti i moduli preview nelle pagine che
+   montano PreviewPane, nomi generici condivisi tra più preview.css
+   entrano nella stessa cascata e possono sovrascriversi a vicenda. */
+.link-underline-reveal-stage {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+}
+
+.link-underline-reveal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.link-underline-reveal-link {
+  position: relative;
+  display: inline-block;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.link-underline-reveal-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 240ms var(--ease-out); /* token-guard: allow */
+}
+
+.link-underline-reveal-link:hover::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-underline-reveal-link::after {
+    transition: none;
+  }
+}

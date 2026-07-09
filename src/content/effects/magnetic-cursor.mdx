@@ -1,0 +1,73 @@
+---
+title: 'Magnetic Cursor'
+category: 'interactions'
+dna: ['Playful', 'Fluid', 'Snappy', 'Kinetic', 'Vivid']
+summary: 'Un bottone non aspetta il passaggio esatto del cursore: quando il puntatore entra nel suo raggio d''azione, l''elemento si sposta leggermente verso di esso, come attratto magneticamente.'
+
+overview:
+  description: |
+    Un elemento interattivo (un bottone, un link, un'icona) non aspetta il
+    passaggio esatto del cursore: quando il puntatore entra in un raggio
+    d'azione attorno al suo centro, l'elemento si sposta leggermente verso
+    di esso, come attratto magneticamente. Più il cursore si avvicina al
+    centro, più lo spostamento è ampio; appena il cursore esce dal raggio o
+    dall'elemento, questo torna elasticamente alla posizione di riposo.
+
+    Tecnicamente il calcolo è vettoriale: ad ogni movimento del puntatore si
+    misura la distanza dal centro dell'elemento e, se rientra nel raggio, si
+    applica uno spostamento proporzionale tramite `gsap.quickTo()`, che
+    interpola la posizione senza ricreare un tween ad ogni frame. Fuori dal
+    raggio l'elemento torna a `(0, 0)` con la stessa interpolazione,
+    ottenendo il rimbalzo elastico.
+  bestFor:
+    - 'Call-to-action isolate in una hero o in una cover ("Vedi il progetto")'
+    - 'Icone social o link secondari, dove un dettaglio vivo aggiunge personalità senza distrarre'
+    - 'Portfolio con un tono giocoso, dove l''interfaccia può permettersi un accento fuori dal registro editoriale standard'
+  avoid:
+    - 'Più di un elemento magnetico per schermata (l''attenzione si frammenta)'
+    - 'Interfacce touch-only, dove non esiste hover e il raggio d''azione non ha senso'
+    - 'Bottoni primari di navigazione, dove un target che si sposta rende il click meno prevedibile'
+
+build:
+  technology: ['JavaScript', 'GSAP']
+  libraries:
+    - name: 'GSAP'
+      url: 'https://gsap.com/'
+  difficulty: 2
+  performance: 'light'
+  notes: 'Il calcolo di distanza avviene ad ogni pointermove, ma resta economico: nessun layout thrashing, solo lettura di getBoundingClientRect() in cache e un''unica coppia gsap.quickTo() per asse.'
+
+knowledge:
+  origin: 'Pattern diffuso nei siti "creative dev" e nei portfolio di studio dalla seconda metà degli anni 2010, spesso citato come "magnetic button", reso popolare da agenzie come Cuberto.'
+  popularizedBy:
+    - 'Portfolio di studi creativi e agenzie digitali'
+    - 'Tutorial Codrops sui bottoni magnetici'
+  alternatives:
+    - 'Hover Image Reveal, dove a muoversi è un''anteprima invece del bottone stesso'
+    - 'Semplice scala al hover, meno caratterizzante ma più prevedibile su target piccoli'
+  resources:
+    - title: 'Magnetic Buttons'
+      url: 'https://tympanus.net/codrops/2020/08/05/magnetic-buttons/'
+      type: 'article'
+    - title: 'gsap.quickTo()'
+      url: 'https://gsap.com/docs/v3/GSAP/gsap.quickTo()'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['custom-cursor-states', 'hover-image-reveal']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Il magnetismo funziona quando è discreto: un
+  raggio d'azione troppo ampio o un'attrazione troppo forte trasformano un
+  dettaglio elegante in un effetto giocattolo. In un portfolio fotografico lo
+  userei solo su una call-to-action, mai su più di un elemento per schermata.
+
+preview:
+  kind: 'gsap'
+  lite: 'magnetic-cursor'
+  module: 'src/previews/magnetic-cursor.ts'
+
+addedAt: '2026-07-09'
+status: 'draft'
+---
