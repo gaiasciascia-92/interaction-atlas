@@ -1,0 +1,207 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-search);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-block-start: var(--space-16);
+  padding-inline: var(--space-3);
+  background: color-mix(in srgb, var(--color-ink) 40%, transparent);
+}
+
+.backdrop[hidden] {
+  display: none;
+}
+
+/* Unico elemento flottante dell'app con --shadow-soft (DESIGN_SYSTEM.md §4). */
+.panel {
+  width: 100%;
+  max-width: 640px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: var(--border-thin);
+}
+
+.searchIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-ink-60);
+}
+
+.searchIcon :global(svg) {
+  width: var(--space-2);
+  height: var(--space-2);
+  stroke-width: 1.5;
+}
+
+.chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* Contenuto della lista risultati e i filtri sono generati interamente da
+   script (nessun elemento server-renderizzato): classi globali di
+   proposito, stesso motivo di is-active/is-placeholder in PreviewPane. */
+:global(.search-chip) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-05);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: none;
+  border-radius: var(--radius-s);
+  padding: var(--space-05) var(--space-1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+:global(.search-chip):hover {
+  background: color-mix(in srgb, var(--color-primary-soft) 60%, var(--color-primary) 15%);
+}
+
+.input {
+  flex: 1;
+  min-width: 120px;
+  font: inherit;
+  font-size: var(--text-body);
+  color: var(--color-ink);
+  background: none;
+  border: none;
+}
+
+.input::placeholder {
+  color: var(--color-ink-60);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--space-4);
+  height: var(--space-4);
+  color: var(--color-ink-60);
+  background: none;
+  border: none;
+  border-radius: var(--radius-s);
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: var(--color-ink);
+}
+
+.closeButton :global(svg) {
+  width: var(--space-2);
+  height: var(--space-2);
+  stroke-width: 1.5;
+}
+
+.results {
+  overflow-y: auto;
+}
+
+.listbox {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2) 0;
+}
+
+:global(.search-group-heading) {
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-label);
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-60);
+}
+
+:global(.search-option) {
+  display: grid;
+  gap: var(--space-05);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+
+:global(.search-option):hover {
+  background: var(--color-hairline);
+}
+
+:global(.search-option.is-active) {
+  background: var(--color-primary-soft);
+}
+
+:global(.search-option-title) {
+  color: var(--color-ink);
+}
+
+:global(.search-option-meta) {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-ink-60);
+}
+
+:global(.search-state-block) {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+}
+
+:global(.search-no-results-message) {
+  margin: 0;
+  color: var(--color-ink-80);
+}
+
+:global(.search-pill-row) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+:global(.search-suggestion-pill) {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-ink-80);
+  background: none;
+  border: var(--border-thin);
+  border-radius: var(--radius-pill);
+  padding: var(--space-05) var(--space-2);
+  cursor: pointer;
+}
+
+:global(.search-suggestion-pill):hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

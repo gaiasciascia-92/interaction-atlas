@@ -1,7 +1,12 @@
 ---
 // SearchBar — variante incassata della ricerca (COMPONENT_RULES.md).
-// TASK_005: presente ma disabilitata, stesso trattamento del bottone
-// "Cerca ⌘K" in AppNav — non funzionante finché TASK_008 non ne fa un'isola.
+// TASK_008: "isola" nell'inventario, ma senza script proprio — è un
+// trigger che apre SearchOverlay (stessa logica condivisa, unica
+// implementazione dei risultati); `readonly` invece di un vero campo di
+// testo perché il testo digitato non viene mai gestito qui, solo nel
+// pannello (evita il flash di tastiera virtuale su mobile e qualunque
+// carattere "perso" nel passaggio di focus). Interpretazione conservativa
+// annotata in CHANGELOG.md.
 import styles from './SearchBar.module.css';
 ---
 
@@ -9,6 +14,7 @@ import styles from './SearchBar.module.css';
   type="text"
   class={styles.input}
   placeholder="Cerca un effetto, un componente, una sensazione…"
-  disabled
-  aria-label="Cerca (disponibile a breve)"
+  readonly
+  aria-label="Cerca un effetto, un componente, una sensazione"
+  data-search-trigger
 />

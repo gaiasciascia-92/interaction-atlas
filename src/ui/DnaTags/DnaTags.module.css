@@ -9,8 +9,17 @@
 
 .pill {
   display: inline-block;
+  font: inherit;
   padding: var(--space-05) var(--space-2);
+  background: none;
   border: var(--border-thin);
   border-radius: var(--radius-pill);
   color: var(--color-ink-80);
+  cursor: pointer;
+  transition: color var(--duration-instant) var(--ease-out), border-color var(--duration-instant) var(--ease-out);
+}
+
+.pill:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }

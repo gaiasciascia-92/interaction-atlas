@@ -1,0 +1,89 @@
+---
+// SearchOverlay — command palette ⌘K/Ctrl+K, globale (COMPONENT_RULES.md,
+// TASK_008). Unico elemento flottante dell'app: `--shadow-soft`,
+// `--z-search`. Montato una sola volta in BaseLayout; possiede l'unica
+// logica JS della ricerca (src/lib/search.ts) e la condivide con SearchBar
+// e con i tag DNA "ovunque nell'app" tramite delega di eventi su
+// `[data-search-trigger]` — così quei componenti restano "no JS" per conto
+// proprio (COMPONENT_RULES.md), coerente con il resto dell'inventario.
+import styles from './SearchOverlay.module.css';
+import searchSvg from 'lucide-static/icons/search.svg?raw';
+import xSvg from 'lucide-static/icons/x.svg?raw';
+---
+
+<div class={styles.backdrop} data-search-backdrop hidden>
+  <div class={styles.panel} role="dialog" aria-modal="true" aria-label="Cerca" data-search-panel>
+    <div class={styles.inputRow}>
+      <span class={styles.searchIcon} aria-hidden="true" set:html={searchSvg} />
+      <div class={styles.chips} data-search-chips></div>
+      <input
+        type="text"
+        class={styles.input}
+        role="combobox"
+        aria-expanded="false"
+        aria-controls="search-listbox"
+        aria-autocomplete="list"
+        aria-label="Cerca un effetto, un componente, una sensazione"
+        placeholder="Cerca un effetto, un componente, una sensazione…"
+        autocomplete="off"
+        spellcheck="false"
+        data-search-input
+      />
+      <button type="button" class={styles.closeButton} data-search-close aria-label="Chiudi ricerca">
+        <Fragment set:html={xSvg} />
+      </button>
+    </div>
+    <div class={styles.results} data-search-results>
+      <ul class={styles.listbox} role="listbox" id="search-listbox" data-search-listbox></ul>
+    </div>
+    <p class={styles.visuallyHidden} aria-live="polite" data-search-announce></p>
+  </div>
+</div>
+
+<script>
+  // Bootstrap minimo, sempre presente in ogni pagina (TASK_008: "nessun
+  // impatto sul first load"): non importa Fuse.js né la logica di rendering
+  // finché non arriva la prima interazione reale con la ricerca. Da quel
+  // momento il runtime (src/ui/SearchOverlay/runtime.ts) prende in carico
+  // esso stesso tutti gli ascoltatori — questo bootstrap si disattiva.
+  let loaded = false;
+  let disposeBootstrap: (() => void) | null = null;
+
+  function boot(pending?: { dnaTerm?: string }) {
+    if (loaded) return;
+    loaded = true;
+    disposeBootstrap?.();
+    void import('./runtime').then(({ initSearchOverlay }) => initSearchOverlay(pending));
+  }
+
+  function onClick(event: MouseEvent) {
+    const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-search-trigger]');
+    if (trigger) boot({ dnaTerm: trigger.dataset.dnaTerm });
+  }
+
+  function onFocusIn(event: FocusEvent) {
+    const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-search-trigger]');
+    if (trigger) boot({ dnaTerm: trigger.dataset.dnaTerm });
+  }
+
+  function onKeydown(event: KeyboardEvent) {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      // Oggetto vuoto, non "undefined": è il segnale per initSearchOverlay
+      // di aprire subito (undefined significherebbe "non aprire", usato solo
+      // se in futuro boot() venisse chiamato per una ragione diversa
+      // dall'apertura, cosa che oggi non accade mai).
+      boot({});
+    }
+  }
+
+  document.addEventListener('click', onClick);
+  document.addEventListener('focusin', onFocusIn);
+  document.addEventListener('keydown', onKeydown);
+
+  disposeBootstrap = () => {
+    document.removeEventListener('click', onClick);
+    document.removeEventListener('focusin', onFocusIn);
+    document.removeEventListener('keydown', onKeydown);
+  };
+</script>
