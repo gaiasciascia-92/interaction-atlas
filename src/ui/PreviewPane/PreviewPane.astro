@@ -10,6 +10,9 @@
 // sempre un placeholder neutro con l'azione "Avvia preview" — stesso
 // meccanismo del fallback prefers-reduced-motion. Vedi CHANGELOG.md.
 import styles from './PreviewPane.module.css';
+import rotateCcwSvg from 'lucide-static/icons/rotate-ccw.svg?raw';
+import maximizeSvg from 'lucide-static/icons/maximize.svg?raw';
+import minimizeSvg from 'lucide-static/icons/minimize.svg?raw';
 
 interface Entry {
   slug: string;
@@ -27,11 +30,19 @@ interface Props {
    * viewport. Category Page: false (default) — Heavy richiede sempre
    * l'azione esplicita "Avvia preview" (PROJECT_SPEC.md §7). */
   heavyAutoStart?: boolean;
+  /** 'category' (default): pannello con titolo/riassunto/link e switch
+   * precedente-successivo tra le voci di `entries` (Category Page). 'effect':
+   * solo lo stage — niente meta/prevNext interni (il titolo è l'h1 della
+   * pagina, prev/next è `PrevNextNav` a fondo pagina, navigazione vera, non
+   * uno switch client-side) — con replay ⟳ e fullscreen ⤢ (TASK_007,
+   * WIREFRAMES.md §3). */
+  variant?: 'category' | 'effect';
 }
 
-const { entries, categoryKey, initialSlug, heavyAutoStart = false } = Astro.props;
+const { entries, categoryKey, initialSlug, heavyAutoStart = false, variant = 'category' } = Astro.props;
 const initialEntry = entries.find((e) => e.slug === initialSlug) ?? entries[0];
 const initialIndex = entries.findIndex((e) => e.slug === initialEntry?.slug);
+const isEffect = variant === 'effect';
 
 // Evita che un valore nei contenuti possa chiudere anticipatamente il tag
 // <script> (nessun contenuto utente qui, ma resta corretto farlo).
@@ -41,43 +52,69 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
 {
   initialEntry && (
     <div
-      class={styles.pane}
+      class={`${styles.pane} ${isEffect ? styles.paneEffect : ''}`}
       data-preview-pane
       data-category-key={categoryKey}
       data-initial-slug={initialSlug}
       data-heavy-auto-start={heavyAutoStart ? 'true' : 'false'}
+      data-variant={variant}
     >
-      <div class={styles.stage} data-stage aria-live="polite">
+      <div class={`${styles.stage} ${isEffect ? styles.stageEffect : ''}`} data-stage aria-live="polite">
         <div class={styles.startOverlay} data-start-overlay hidden>
           <button type="button" class={styles.startButton} data-start-button>
             Avvia preview
           </button>
         </div>
+        {isEffect && (
+          <div class={styles.previewControls} data-preview-controls>
+            <button type="button" class={styles.controlButton} data-replay-button aria-label="Rigioca la preview">
+              <Fragment set:html={rotateCcwSvg} />
+            </button>
+            <button
+              type="button"
+              class={styles.controlButton}
+              data-fullscreen-button
+              aria-label="Schermo intero"
+              aria-pressed="false"
+            >
+              <span class={styles.iconEnter}>
+                <Fragment set:html={maximizeSvg} />
+              </span>
+              <span class={styles.iconExit}>
+                <Fragment set:html={minimizeSvg} />
+              </span>
+            </button>
+          </div>
+        )}
       </div>
-      <div class={styles.meta}>
-        <p class={`${styles.title} text-h3`} data-effect-title>
-          {initialEntry.title}
-        </p>
-        <p class={`${styles.summary} text-body text-muted`} data-effect-summary>
-          {initialEntry.summary}
-        </p>
-        <a href={initialEntry.href} class={styles.openLink} data-open-link>
-          Apri scheda →
-        </a>
-      </div>
-      <div class={styles.prevNext}>
-        <button type="button" class={styles.navButton} data-prev-button disabled={initialIndex <= 0}>
-          ← precedente
-        </button>
-        <button
-          type="button"
-          class={styles.navButton}
-          data-next-button
-          disabled={initialIndex < 0 || initialIndex >= entries.length - 1}
-        >
-          successivo →
-        </button>
-      </div>
+      {!isEffect && (
+        <div class={styles.meta}>
+          <p class={`${styles.title} text-h3`} data-effect-title>
+            {initialEntry.title}
+          </p>
+          <p class={`${styles.summary} text-body text-muted`} data-effect-summary>
+            {initialEntry.summary}
+          </p>
+          <a href={initialEntry.href} class={styles.openLink} data-open-link>
+            Apri scheda →
+          </a>
+        </div>
+      )}
+      {!isEffect && (
+        <div class={styles.prevNext}>
+          <button type="button" class={styles.navButton} data-prev-button disabled={initialIndex <= 0}>
+            ← precedente
+          </button>
+          <button
+            type="button"
+            class={styles.navButton}
+            data-next-button
+            disabled={initialIndex < 0 || initialIndex >= entries.length - 1}
+          >
+            successivo →
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -108,16 +145,22 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
     const entries: Entry[] = JSON.parse(dataEl.textContent ?? '[]');
     const categoryKey = paneEl.dataset.categoryKey!;
     const heavyAutoStart = paneEl.dataset.heavyAutoStart === 'true';
+    const variant = paneEl.dataset.variant === 'effect' ? 'effect' : 'category';
     const slugs = entries.map((e) => e.slug);
 
     const stageEl = paneEl.querySelector<HTMLElement>('[data-stage]')!;
     const startOverlay = paneEl.querySelector<HTMLElement>('[data-start-overlay]')!;
     const startButton = paneEl.querySelector<HTMLButtonElement>('[data-start-button]')!;
-    const titleEl = paneEl.querySelector<HTMLElement>('[data-effect-title]')!;
-    const summaryEl = paneEl.querySelector<HTMLElement>('[data-effect-summary]')!;
-    const openLinkEl = paneEl.querySelector<HTMLAnchorElement>('[data-open-link]')!;
-    const prevButton = paneEl.querySelector<HTMLButtonElement>('[data-prev-button]')!;
-    const nextButton = paneEl.querySelector<HTMLButtonElement>('[data-next-button]')!;
+    // Solo variant="category": assenti dal DOM (e mai letti) in variant="effect".
+    const titleEl = paneEl.querySelector<HTMLElement>('[data-effect-title]');
+    const summaryEl = paneEl.querySelector<HTMLElement>('[data-effect-summary]');
+    const openLinkEl = paneEl.querySelector<HTMLAnchorElement>('[data-open-link]');
+    const prevButton = paneEl.querySelector<HTMLButtonElement>('[data-prev-button]');
+    const nextButton = paneEl.querySelector<HTMLButtonElement>('[data-next-button]');
+    // Solo variant="effect".
+    const previewControls = paneEl.querySelector<HTMLElement>('[data-preview-controls]');
+    const replayButton = paneEl.querySelector<HTMLButtonElement>('[data-replay-button]');
+    const fullscreenButton = paneEl.querySelector<HTMLButtonElement>('[data-fullscreen-button]');
 
     const params = new URLSearchParams(location.search);
     const requestedSlug = params.get('e');
@@ -235,6 +278,7 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
     }
 
     function updateMeta(entry: Entry, index: number) {
+      if (!titleEl || !summaryEl || !openLinkEl || !prevButton || !nextButton) return;
       titleEl.textContent = entry.title;
       summaryEl.textContent = entry.summary;
       openLinkEl.href = entry.href;
@@ -245,6 +289,7 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
     function showManualStart(show: boolean) {
       awaitingManualStart = show;
       startOverlay.hidden = !show;
+      if (previewControls) previewControls.hidden = show;
     }
 
     function applyVisibility() {
@@ -344,8 +389,50 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
       transitionTo(index, direction);
     });
 
-    prevButton.addEventListener('click', () => controller.prev());
-    nextButton.addEventListener('click', () => controller.next());
+    prevButton?.addEventListener('click', () => controller.prev());
+    nextButton?.addEventListener('click', () => controller.next());
+
+    // Controlli replay/fullscreen — solo variant="effect" (TASK_007,
+    // WIREFRAMES.md §3): replay ⟳ rimonta l'unica voce da capo (non è un
+    // voltapagina: stessa entry, nessuno scambio di contenuto, quindi nessuna
+    // transizione di uscita/entrata); fullscreen ⤢ usa la Fullscreen API
+    // nativa sullo stage, così Esc la chiude in modo coerente su ogni
+    // browser senza codice dedicato. Scorciatoia `f` (decisione H).
+    if (variant === 'effect' && replayButton && fullscreenButton) {
+      replayButton.addEventListener('click', () => {
+        if (!current || awaitingManualStart) return;
+        const { entry, el, module } = current;
+        module?.destroy();
+        markInactive(module);
+        mountLive(entry, el, { reducedMotion }).then((mod) => {
+          current = { entry, el, module: mod };
+          applyVisibility();
+        });
+      });
+
+      fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenElement === stageEl) {
+          document.exitFullscreen();
+        } else {
+          stageEl.requestFullscreen?.();
+        }
+      });
+
+      document.addEventListener('fullscreenchange', () => {
+        const isFs = document.fullscreenElement === stageEl;
+        fullscreenButton.setAttribute('aria-pressed', String(isFs));
+        fullscreenButton.classList.toggle('is-fullscreen', isFs);
+        if (!isFs) fullscreenButton.focus();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key.toLowerCase() !== 'f' || event.metaKey || event.ctrlKey || event.altKey) return;
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('input, textarea, [contenteditable="true"]')) return;
+        event.preventDefault();
+        fullscreenButton.click();
+      });
+    }
 
     // Pause/resume su visibilità (MOTION_PRINCIPLES.md §4); avvio automatico
     // differito di un Heavy con heavyAutoStart al primo ingresso in viewport.

@@ -1,0 +1,18 @@
+---
+// MetaField — coppia etichetta·valore in Geist Mono (COMPONENT_RULES.md,
+// Effect/Build). Il valore è nello slot: può essere testo semplice o un
+// componente figlio (es. DifficultyDots).
+import styles from './MetaField.module.css';
+
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<div class={styles.field}>
+  <span class={`${styles.label} text-meta`}>{label}</span>
+  <span class={styles.separator} aria-hidden="true">·</span>
+  <span class={`${styles.value} text-meta`}><slot /></span>
+</div>

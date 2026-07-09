@@ -1,0 +1,12 @@
+---
+// InsightBlock — corpo h3, filetto Purple, blocco "firmato" (COMPONENT_RULES.md,
+// Effect; WIREFRAMES.md §3). "Firmato" è reso solo dal trattamento tipografico
+// distintivo (h3, rientro, filetto): lo schema contenuti non prevede un campo
+// per il nome del curatore, quindi non si inventa una riga di firma testuale
+// (annotato in CHANGELOG.md).
+import styles from './InsightBlock.module.css';
+---
+
+<blockquote class={styles.block}>
+  <p class={`${styles.body} text-h3`}><slot /></p>
+</blockquote>

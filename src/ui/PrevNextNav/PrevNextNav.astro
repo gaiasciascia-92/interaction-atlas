@@ -1,0 +1,42 @@
+---
+// PrevNextNav — effetto precedente/successivo, ordine interno alla categoria
+// (COMPONENT_RULES.md, Effect). Mostra il titolo reale della voce vicina (non
+// la parola generica "precedente/successivo" della didascalia in
+// WIREFRAMES.md §3): mantiene il contesto, come richiesto esplicitamente per
+// questo componente — interpretazione conservativa annotata in CHANGELOG.md.
+// Non renderizza nulla se non esiste né precedente né successivo.
+import styles from './PrevNextNav.module.css';
+
+interface NavEntry {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  prev?: NavEntry;
+  next?: NavEntry;
+}
+
+const { prev, next } = Astro.props;
+---
+
+{
+  (prev || next) && (
+    <nav class={styles.nav} aria-label="Altri effetti della categoria">
+      <span class={styles.side}>
+        {prev && (
+          <a href={prev.href} class={styles.link}>
+            ← {prev.title}
+          </a>
+        )}
+      </span>
+      <span class={styles.side}>
+        {next && (
+          <a href={next.href} class={styles.link}>
+            {next.title} →
+          </a>
+        )}
+      </span>
+    </nav>
+  )
+}

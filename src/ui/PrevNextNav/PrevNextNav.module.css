@@ -1,0 +1,18 @@
+.nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.side {
+  min-width: 0;
+}
+
+.link {
+  color: var(--color-ink-60);
+}
+
+.link:hover {
+  color: var(--color-primary);
+}

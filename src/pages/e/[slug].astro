@@ -1,0 +1,334 @@
+---
+// Effect Page — WIREFRAMES.md §3, TASK_007. Flusso verticale unico, sei
+// sezioni (Preview, Overview, Build, Knowledge, Explore, Insight), mai
+// tab/accordion. Sezioni/campi renderizzati solo se il contenuto esiste.
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageShell from '../../ui/PageShell/PageShell.astro';
+import SectionLabel from '../../ui/SectionLabel/SectionLabel.astro';
+import PreviewPane from '../../ui/PreviewPane/PreviewPane.astro';
+import DnaTags from '../../ui/DnaTags/DnaTags.astro';
+import MetaField from '../../ui/MetaField/MetaField.astro';
+import DifficultyDots from '../../ui/DifficultyDots/DifficultyDots.astro';
+import ExternalLink from '../../ui/ExternalLink/ExternalLink.astro';
+import InsightBlock from '../../ui/InsightBlock/InsightBlock.astro';
+import PrevNextNav from '../../ui/PrevNextNav/PrevNextNav.astro';
+import { publishedOrAll } from '../../lib/content';
+import { CATEGORY_META } from '../../lib/categories';
+
+export async function getStaticPaths() {
+  const effects = await getCollection('effects');
+  const components = await getCollection('catalog-components');
+  return [
+    ...effects.map((entry) => ({
+      params: { slug: entry.id },
+      props: { entry, collectionName: 'effects' as const },
+    })),
+    ...components.map((entry) => ({
+      params: { slug: entry.id },
+      props: { entry, collectionName: 'catalog-components' as const },
+    })),
+  ];
+}
+
+const { entry, collectionName } = Astro.props;
+const { data } = entry;
+const meta = CATEGORY_META[data.category];
+
+// Precedente/successivo: stesso criterio d'ordine della Category Page
+// (addedAt discendente), tra le sole voci della stessa categoria — o
+// dell'intera collection catalog-components, che è la "categoria" Components
+// (README.md, nota sul naming).
+const siblings =
+  collectionName === 'catalog-components'
+    ? publishedOrAll(await getCollection('catalog-components')).sort((a, b) =>
+        b.data.addedAt.localeCompare(a.data.addedAt),
+      )
+    : publishedOrAll(await getCollection('effects', (e) => e.data.category === data.category)).sort((a, b) =>
+        b.data.addedAt.localeCompare(a.data.addedAt),
+      );
+const siblingIndex = siblings.findIndex((e) => e.id === entry.id);
+const prevEntry = siblingIndex > 0 ? siblings[siblingIndex - 1] : undefined;
+const nextEntry =
+  siblingIndex >= 0 && siblingIndex < siblings.length - 1 ? siblings[siblingIndex + 1] : undefined;
+const prevNav = prevEntry && { title: prevEntry.data.title, href: `/e/${prevEntry.id}` };
+const nextNav = nextEntry && { title: nextEntry.data.title, href: `/e/${nextEntry.id}` };
+
+// Explore → Related: risolve i reference a titolo+href. Le 3 voci campione
+// attuali hanno relatedEffects/relatedComponents vuoti: questo ramo non è
+// esercitato dal contenuto oggi, ma resta necessario per lo schema.
+const relatedEffects = (
+  await Promise.all(data.explore.relatedEffects.map((ref) => getEntry(ref)))
+).filter((e): e is NonNullable<typeof e> => e != null);
+const relatedComponents = (
+  await Promise.all(data.explore.relatedComponents.map((ref) => getEntry(ref)))
+).filter((e): e is NonNullable<typeof e> => e != null);
+
+const hasExplore =
+  !!data.explore.demo ||
+  !!data.explore.source ||
+  !!data.explore.video ||
+  !!data.explore.article ||
+  relatedEffects.length > 0 ||
+  relatedComponents.length > 0;
+
+// PreviewPane si aspetta un array `entries` (contratto Category Page): qui
+// una sola voce basta, variant="effect" nasconde lo switch interno
+// prev/next e il blocco titolo/riassunto (vedi PreviewPane.astro).
+const previewEntries = [
+  {
+    slug: entry.id,
+    title: data.title,
+    summary: data.summary,
+    href: `/e/${entry.id}`,
+    preview: { kind: data.preview.kind, module: data.preview.module },
+  },
+];
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.summary}
+  navBack={{ label: meta.label, href: meta.href }}
+  navContext={data.title}
+>
+  <PageShell>
+    <div class="header">
+      <h1 class="text-h1">{data.title}</h1>
+      <DnaTags terms={data.dna} />
+    </div>
+  </PageShell>
+
+  <PageShell>
+    <div class="previewWrap">
+      <PreviewPane
+        entries={previewEntries}
+        categoryKey={`effect-${entry.id}`}
+        initialSlug={entry.id}
+        heavyAutoStart={true}
+        variant="effect"
+      />
+    </div>
+  </PageShell>
+
+  <PageShell><hr class="hr" /></PageShell>
+
+  <PageShell>
+    <section class="section">
+      <SectionLabel as="h2">Overview</SectionLabel>
+      <p class="text-body">{data.overview.description}</p>
+      {data.overview.bestFor.length > 0 && (
+        <MetaField label="Best for">{data.overview.bestFor.join(' · ')}</MetaField>
+      )}
+      {data.overview.avoid.length > 0 && <MetaField label="Avoid">{data.overview.avoid.join(' · ')}</MetaField>}
+    </section>
+  </PageShell>
+
+  <PageShell><hr class="hr" /></PageShell>
+
+  <PageShell>
+    <section class="section">
+      <SectionLabel as="h2">Build</SectionLabel>
+      <div class="metaGrid">
+        <MetaField label="Technology">{data.build.technology.join(' + ')}</MetaField>
+        <MetaField label="Difficulty">
+          <DifficultyDots value={data.build.difficulty} />
+        </MetaField>
+        {data.build.libraries.length > 0 && (
+          <MetaField label="Libraries">{data.build.libraries.map((l) => l.name).join(' · ')}</MetaField>
+        )}
+        <MetaField label="Performance">{data.build.performance}</MetaField>
+      </div>
+      {data.build.notes && <p class="text-small text-muted">{data.build.notes}</p>}
+    </section>
+  </PageShell>
+
+  <PageShell><hr class="hr" /></PageShell>
+
+  <PageShell>
+    <section class="section">
+      <SectionLabel as="h2">Knowledge</SectionLabel>
+      <p class="text-body">{data.knowledge.origin}</p>
+      {data.knowledge.popularizedBy.length > 0 && (
+        <MetaField label="Popularized by">{data.knowledge.popularizedBy.join(' · ')}</MetaField>
+      )}
+      {data.knowledge.alternatives.length > 0 && (
+        <MetaField label="Alternatives">{data.knowledge.alternatives.join(' · ')}</MetaField>
+      )}
+      {data.knowledge.resources.length > 0 && (
+        <div class="fieldGroup">
+          <span class="text-meta text-muted">Learning Resources</span>
+          <ul class="linkList">
+            {data.knowledge.resources.map((resource) => (
+              <li>
+                <ExternalLink href={resource.url}>{resource.title}</ExternalLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  </PageShell>
+
+  {
+    hasExplore && (
+      <>
+        <PageShell>
+          <hr class="hr" />
+        </PageShell>
+        <PageShell>
+          <section class="section">
+            <SectionLabel as="h2">Explore</SectionLabel>
+            <ul class="exploreLinks">
+              {data.explore.demo && (
+                <li>
+                  <ExternalLink href={data.explore.demo}>Demo</ExternalLink>
+                </li>
+              )}
+              {data.explore.source && (
+                <li>
+                  <ExternalLink href={data.explore.source}>Source</ExternalLink>
+                </li>
+              )}
+              {data.explore.video && (
+                <li>
+                  <ExternalLink href={data.explore.video}>Video</ExternalLink>
+                </li>
+              )}
+              {data.explore.article && (
+                <li>
+                  <ExternalLink href={data.explore.article}>Article</ExternalLink>
+                </li>
+              )}
+            </ul>
+            {relatedEffects.length > 0 && (
+              <div class="fieldGroup">
+                <span class="text-meta text-muted">Related</span>
+                <ul class="linkList">
+                  {relatedEffects.map((r) => (
+                    <li>
+                      <a href={`/e/${r.id}`} class="text-small">
+                        {r.data.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {relatedComponents.length > 0 && (
+              <div class="fieldGroup">
+                <span class="text-meta text-muted">Components</span>
+                <ul class="linkList">
+                  {relatedComponents.map((r) => (
+                    <li>
+                      <a href={`/e/${r.id}`} class="text-small">
+                        {r.data.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+        </PageShell>
+      </>
+    )
+  }
+
+  <PageShell><hr class="hr" /></PageShell>
+
+  <PageShell>
+    <section class="section">
+      <SectionLabel as="h2">Insight</SectionLabel>
+      <InsightBlock>{data.insight}</InsightBlock>
+    </section>
+  </PageShell>
+
+  {
+    (prevNav || nextNav) && (
+      <>
+        <PageShell>
+          <hr class="hr" />
+        </PageShell>
+        <PageShell>
+          <div class="prevNextWrap">
+            <PrevNextNav prev={prevNav} next={nextNav} />
+          </div>
+        </PageShell>
+      </>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .header {
+    grid-column: 1 / 9;
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-8) var(--space-4);
+  }
+
+  .previewWrap {
+    grid-column: 1 / -1;
+  }
+
+  .hr {
+    grid-column: 1 / -1;
+    border: none;
+    border-top: var(--border-thin);
+  }
+
+  .section {
+    grid-column: 1 / 9;
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-6);
+  }
+
+  .metaGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .fieldGroup {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .linkList,
+  .exploreLinks {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .exploreLinks {
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: var(--space-4);
+  }
+
+  .prevNextWrap {
+    grid-column: 1 / -1;
+    padding-block: var(--space-6) var(--space-16);
+  }
+
+  @media (max-width: 768px) {
+    .header,
+    .section {
+      grid-column: 1 / -1;
+    }
+
+    .metaGrid {
+      grid-template-columns: 1fr;
+    }
+
+    .exploreLinks {
+      grid-auto-flow: row;
+      gap: var(--space-1);
+    }
+  }
+</style>

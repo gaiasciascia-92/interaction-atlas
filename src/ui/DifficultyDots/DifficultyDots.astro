@@ -1,0 +1,18 @@
+---
+// DifficultyDots — 5 punti, pieni in Orange, testo alternativo obbligatorio
+// (COMPONENT_RULES.md, Effect/Build; WIREFRAMES.md §3). role="img" + aria-label
+// sul contenitore: i punti decorativi restano invisibili alla tecnologia
+// assistiva, che legge solo l'etichetta (pattern APG per gruppi di icone).
+import styles from './DifficultyDots.module.css';
+
+interface Props {
+  value: 1 | 2 | 3 | 4 | 5;
+}
+
+const { value } = Astro.props;
+const dots = [1, 2, 3, 4, 5];
+---
+
+<span class={styles.dots} role="img" aria-label={`Difficoltà ${value} su 5`}>
+  {dots.map((i) => <span class={`${styles.dot} ${i <= value ? styles.filled : ''}`} />)}
+</span>

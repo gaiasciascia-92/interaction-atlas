@@ -1,0 +1,17 @@
+.field {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.label {
+  color: var(--color-ink-60);
+}
+
+.separator {
+  color: var(--color-ink-40);
+}
+
+.value {
+  color: var(--color-ink);
+}

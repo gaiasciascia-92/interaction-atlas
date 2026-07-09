@@ -1,0 +1,28 @@
+---
+// DnaTags — pill Geist Mono per i termini di Visual DNA (COMPONENT_RULES.md,
+// componente "trasversale"). Il click è inerte in questo turno: la ricerca
+// filtrata da tag arriva con TASK_008 (vedi CHANGELOG.md). Reso come <span>
+// non interattivo — non un <button>/<a> senza destinazione — per non offrire
+// un'affordance di click che oggi non fa nulla (DESIGN_SYSTEM.md §6 vieta
+// stati non previsti; "disabilitato" non si applica: qui non è un controllo
+// temporaneamente spento, è semplicemente un'etichetta, per ora).
+import styles from './DnaTags.module.css';
+
+interface Props {
+  terms: string[];
+}
+
+const { terms } = Astro.props;
+---
+
+{
+  terms.length > 0 && (
+    <ul class={styles.list} aria-label="Visual DNA">
+      {terms.map((term) => (
+        <li>
+          <span class={`${styles.pill} text-meta`}>{term}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}

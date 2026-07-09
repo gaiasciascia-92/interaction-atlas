@@ -1,0 +1,16 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pill {
+  display: inline-block;
+  padding: var(--space-05) var(--space-2);
+  border: var(--border-thin);
+  border-radius: var(--radius-pill);
+  color: var(--color-ink-80);
+}

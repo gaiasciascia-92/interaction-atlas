@@ -1,0 +1,17 @@
+---
+// ExternalLink — link con ↗ e rel corretti (COMPONENT_RULES.md, Explore).
+// Riusato anche per Knowledge → Learning Resources (stessa natura: link
+// esterno, stesso bisogno di rel corretti), non essendo previsto un secondo
+// componente di link esterno nell'inventario — annotato in CHANGELOG.md.
+import styles from './ExternalLink.module.css';
+
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+
+<a href={href} class={`${styles.link} text-small`} target="_blank" rel="noopener noreferrer">
+  <slot /><span aria-hidden="true"> ↗</span>
+</a>
