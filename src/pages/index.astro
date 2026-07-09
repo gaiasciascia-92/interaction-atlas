@@ -40,8 +40,9 @@ const recent = [...visibleEffects, ...visibleComponents]
 
 <BaseLayout title="Atlas">
   <PageShell>
-    <div class="hero">
-      <h1 class="text-display">Un atlante di interazioni per portfolio contemporanei.</h1>
+    <div class="hero" data-hero>
+      <h1 class="text-display" data-hero-title>Un atlante di interazioni per portfolio contemporanei.</h1>
+      <a href="/e/magnetic-cursor" class="heroCaption text-meta">↳ Magnetic Cursor — dal catalogo</a>
       <p class="text-body text-muted">
         Cataloga, confronta e scegli l'interazione giusta nel minor tempo possibile.
       </p>
@@ -98,6 +99,24 @@ const recent = [...visibleEffects, ...visibleComponents]
 </BaseLayout>
 
 <script>
+  // Hero-esemplare (WIREFRAMES.md §1, MOTION_PRINCIPLES.md §1 — eccezione
+  // documentata): il titolo reagisce con Magnetic Cursor solo su hover reale
+  // da desktop. `(hover: hover)` esclude touch prima ancora di valutare
+  // prefers-reduced-motion; anche il modulo condiviso (src/lib/magnetic-pull.ts,
+  // che internamente importa GSAP) arriva per import() dinamico solo dentro
+  // questo ramo, così un dispositivo mobile/touch non scarica neppure quel
+  // piccolo wrapper — zero byte relativi a questa feature sul first load mobile.
+  const heroEl = document.querySelector<HTMLElement>('[data-hero]');
+  const heroTitleEl = document.querySelector<HTMLElement>('[data-hero-title]');
+  const hoverCapable = window.matchMedia('(hover: hover)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (heroEl && heroTitleEl && hoverCapable.matches && !reducedMotion.matches) {
+    void import('../lib/magnetic-pull').then(({ attachMagneticPull }) => {
+      void attachMagneticPull(heroEl, heroTitleEl, { radius: 140, strength: 0.15 });
+    });
+  }
+
   const rowsEl = document.querySelector('[data-category-rows]');
   const panels = document.querySelectorAll<HTMLElement>('[data-preview-lite]');
 
@@ -142,6 +161,20 @@ const recent = [...visibleEffects, ...visibleComponents]
     display: grid;
     gap: var(--space-2);
     padding-block-start: var(--space-12);
+  }
+
+  .hero [data-hero-title] {
+    will-change: transform;
+  }
+
+  .heroCaption {
+    color: var(--color-ink-60);
+    text-decoration: none;
+    margin-block-start: calc(var(--space-2) * -1);
+  }
+
+  .heroCaption:hover {
+    color: var(--color-primary);
   }
 
   .searchWrap {

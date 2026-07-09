@@ -1,11 +1,13 @@
 ---
-// PreviewLite — solo CSS, nessuna dipendenza (COMPONENT_RULES.md). Mostra
-// l'identità della categoria (nome + conteggio) su uno sfondo neutro: nessun
-// asset fotografico reale è ancora disponibile, quindi nessuna forma o colore
-// per-categoria inventata (DESIGN_SYSTEM.md §3: a riposo l'app è bicroma,
-// Purple appare solo dove c'è interazione — qui, solo sul pannello attivo).
-// Le classi is-active/is-dimmed sono globali di proposito: pilotate dallo
-// script della Home, non da questo componente (che resta "no JS").
+// PreviewLite — solo CSS, nessuna dipendenza (COMPONENT_RULES.md). Micro-demo
+// rappresentativa della categoria, non un placeholder neutro: default
+// provvisori scelti dal curatore (2026-07-08, TASK_011) in attesa della
+// scelta definitiva degli "effetti vetrina" — vedi CHANGELOG.md. Nessun
+// GSAP/Three, nessun asset esterno: solo forme e tipografia sui token,
+// animate via @keyframes CSS. Le classi is-active/is-dimmed sono globali di
+// proposito: pilotate dallo script della Home, non da questo componente
+// (che resta "no JS"); l'animazione dei loop parte solo mentre uno dei due
+// stati è attivo — mai a riposo, mai in autonomia.
 import styles from './PreviewLite.module.css';
 
 interface Props {
@@ -18,7 +20,28 @@ const { name, count, category } = Astro.props;
 ---
 
 <div class={styles.panel} data-preview-lite data-category={category}>
-  <div class={styles.swatch} aria-hidden="true"></div>
+  <div class={styles.swatch} aria-hidden="true">
+    {
+      category === 'interactions' && (
+        <span class={styles.interactionsDot} />
+      )
+    }
+    {
+      category === 'motion' && <div class={styles.motionPhoto} />
+    }
+    {
+      category === 'visual-effects' && <div class={styles.veLayer} />
+    }
+    {
+      category === 'components' && (
+        <div class={styles.componentsGrid}>
+          {Array.from({ length: 6 }).map(() => (
+            <span />
+          ))}
+        </div>
+      )
+    }
+  </div>
   <div class={styles.caption}>
     <p class={`${styles.name} text-h3`}>{name}</p>
     <p class={`${styles.count} text-meta`}>{count} {count === 1 ? 'voce' : 'voci'}</p>

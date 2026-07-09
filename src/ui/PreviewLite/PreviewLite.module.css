@@ -25,6 +25,156 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, var(--color-hairline), var(--color-ink-40));
+  overflow: hidden;
+}
+
+/* Micro-demo per categoria (TASK_011): animano solo mentre il pannello è
+   is-active/is-dimmed — mai a riposo, mai in autonomia (SILENT_UI regola 1).
+   prefers-reduced-motion è già gestito dal kill-switch globale in base.css
+   (animation-duration forzata quasi a zero, un solo iteration-count). */
+
+/* Interactions — suggestione magnetica: un punto che viene "attratto" al
+   centro con un assestamento elastico, si ferma, poi si ricompone. */
+.interactionsDot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+}
+
+.panel:global(.is-active) .interactionsDot,
+.panel:global(.is-dimmed) .interactionsDot {
+  animation: interactions-pull 3.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+@keyframes interactions-pull {
+  0%, 40% {
+    transform: translate(-28px, 12px);
+  }
+  60% {
+    transform: translate(3px, -2px);
+  }
+  75%, 100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Motion — loop di blur reveal: stessa tecnica di src/previews/blur-reveal.css,
+   qui in loop invece che scroll-triggered una tantum. */
+.motionPhoto {
+  position: absolute;
+  inset: var(--space-3);
+  background: linear-gradient(135deg, var(--color-ink-40), var(--color-primary-soft) 55%, var(--color-warm));
+  filter: blur(16px);
+  opacity: 0.4;
+}
+
+.panel:global(.is-active) .motionPhoto,
+.panel:global(.is-dimmed) .motionPhoto {
+  animation: motion-blur-reveal 4.8s var(--ease-inout) infinite;
+}
+
+@keyframes motion-blur-reveal {
+  0%, 20% {
+    filter: blur(16px);
+    opacity: 0.4;
+  }
+  50%, 70% {
+    filter: blur(0);
+    opacity: 1;
+  }
+  100% {
+    filter: blur(16px);
+    opacity: 0.4;
+  }
+}
+
+/* Visual Effects — wobble/distorsione via filtri CSS: nessun asset, solo
+   un lieve hue-rotate + scala/skew sul gradiente di sfondo. */
+.veLayer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-ink-40), var(--color-primary-soft));
+}
+
+.panel:global(.is-active) .veLayer,
+.panel:global(.is-dimmed) .veLayer {
+  animation: ve-wobble 5.2s var(--ease-inout) infinite;
+}
+
+@keyframes ve-wobble {
+  0%, 100% {
+    filter: hue-rotate(0deg) saturate(1);
+    transform: scale(1) skew(0deg);
+  }
+  33% {
+    filter: hue-rotate(6deg) saturate(1.15);
+    transform: scale(1.02) skew(0.6deg);
+  }
+  66% {
+    filter: hue-rotate(-5deg) saturate(0.9);
+    transform: scale(0.99) skew(-0.5deg);
+  }
+}
+
+/* Components — griglia editoriale che si compone: blocchi che entrano in
+   sequenza sfalsata, restano, poi si ritirano per ripartire. */
+.componentsGrid {
+  position: absolute;
+  inset: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--space-1);
+}
+
+.componentsGrid span {
+  background: var(--color-ink-40);
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.panel:global(.is-active) .componentsGrid span,
+.panel:global(.is-dimmed) .componentsGrid span {
+  animation: components-compose 4s var(--ease-out) infinite;
+}
+
+.componentsGrid span:nth-child(1) {
+  animation-delay: 0s;
+}
+.componentsGrid span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.componentsGrid span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+.componentsGrid span:nth-child(4) {
+  animation-delay: 0.36s;
+}
+.componentsGrid span:nth-child(5) {
+  animation-delay: 0.48s;
+}
+.componentsGrid span:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes components-compose {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  20%, 75% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  95%, 100% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 
 .caption {
@@ -43,5 +193,29 @@
 @media (prefers-reduced-motion: reduce) {
   .panel {
     transition: none;
+  }
+
+  /* Il kill-switch globale (base.css) azzera già la durata delle animazioni;
+     qui si fissa esplicitamente anche il fotogramma di riposo, per non
+     dipendere da quale stato "base" (pre-animazione) capita di coincidere
+     con un frame leggibile — la griglia Components, in particolare, parte
+     da opacity 0 per il loop normale e resterebbe invisibile senza questo. */
+  .interactionsDot {
+    transform: translate(0, 0);
+  }
+
+  .motionPhoto {
+    filter: blur(16px);
+    opacity: 0.4;
+  }
+
+  .veLayer {
+    filter: none;
+    transform: none;
+  }
+
+  .componentsGrid span {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

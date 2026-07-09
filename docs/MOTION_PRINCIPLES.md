@@ -7,12 +7,14 @@ Distinzione fondativa: esistono **due regimi di movimento** e non vanno mai conf
 
 Un effetto spettacolare dentro la preview è il prodotto. Lo stesso effetto applicato al telaio è un errore.
 
+**Eccezione documentata (approvata dal curatore, 2026-07-08):** il titolo display della Home (`WIREFRAMES.md` §1, "hero-esemplare") reagisce al passaggio del mouse con l'effetto Magnetic Cursor del catalogo — elastic incluso, in deroga letterale alla regola "niente elastic nel telaio" di §1 qui sotto. Non è un'incoerenza silenziosa: quel titolo non è telaio, è il primo esemplare dell'atlante esposto in Home, etichettato come tale dalla micro-didascalia "↳ Magnetic Cursor — dal catalogo" sotto di esso. Riusa la logica condivisa del modulo preview (`src/lib/magnetic-pull.ts`), mai una riscrittura; reagisce solo su hover reale, mai in autonomia.
+
 ---
 
 ## 1. Principi del telaio
 
 - **Il movimento è informazione.** Ogni transizione deve rispondere a una domanda dell'utente («dove sono finito?», «cosa è cambiato?»). Se non risponde a niente, si elimina.
-- **Breve, deciso, senza rimbalzi.** Niente bounce, niente elastic, niente overshoot nel telaio. Sono vocaboli del contenuto, non della segnaletica.
+- **Breve, deciso, senza rimbalzi.** Niente bounce, niente elastic, niente overshoot nel telaio. Sono vocaboli del contenuto, non della segnaletica. (Eccezione documentata qui sopra: l'hero-esemplare della Home non è telaio.)
 - **Opacità e traslazione, quasi mai scala.** Le transizioni del telaio usano fade e slide ≤ 16 px. La scala è riservata al voltapagina della preview.
 - **Il testo non si anima lettera per lettera** nel telaio. Gli split-text sono materia da catalogo.
 
