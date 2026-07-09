@@ -43,11 +43,11 @@
   transition: transform 360ms var(--ease-inout) 80ms, opacity 360ms var(--ease-inout) 80ms; /* token-guard: allow */
 }
 
-.stage :global(.slot.is-fallback) {
-  display: flex;
-  align-items: flex-end;
-  padding: var(--space-4);
-  background: var(--color-hairline);
+/* Placeholder pre-avvio (reduced motion o Heavy con gate manuale): stesso
+   trattamento neutro (nessun colore per categoria/effetto) di PreviewLite
+   in Home — solo opacità di Black, Purple riservato all'attivo. */
+.stage :global(.slot.is-placeholder) {
+  background: linear-gradient(135deg, var(--color-hairline), var(--color-ink-40));
 }
 
 @media (prefers-reduced-motion: reduce) {

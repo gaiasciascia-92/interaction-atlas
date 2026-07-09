@@ -4,10 +4,11 @@
 // È l'UNICO componente autorizzato a importare moduli preview (contratto
 // PreviewModule, COMPONENT_RULES.md).
 //
-// Vincolo PROJECT_SPEC.md §7: il livello "Heavy" (WebGL/Three.js) è
-// "Solo Effect Page" — sulla Category Page un effetto preview.kind
-// "webgl" NON monta il modulo reale: mostra uno stato statico neutro con
-// link alla Effect Page (TASK_007). Vedi CHANGELOG.md.
+// Vincolo PROJECT_SPEC.md §7: il livello "Heavy" (WebGL/Three.js) può
+// partire su viewport solo se `heavyAutoStart` è true (Effect Page); sulla
+// Category Page (default false) un effetto preview.kind "webgl" mostra
+// sempre un placeholder neutro con l'azione "Avvia preview" — stesso
+// meccanismo del fallback prefers-reduced-motion. Vedi CHANGELOG.md.
 import styles from './PreviewPane.module.css';
 
 interface Entry {
@@ -22,9 +23,13 @@ interface Props {
   entries: Entry[];
   categoryKey: string;
   initialSlug: string;
+  /** Effect Page: true — Heavy (WebGL) può avviarsi da solo quando entra nel
+   * viewport. Category Page: false (default) — Heavy richiede sempre
+   * l'azione esplicita "Avvia preview" (PROJECT_SPEC.md §7). */
+  heavyAutoStart?: boolean;
 }
 
-const { entries, categoryKey, initialSlug } = Astro.props;
+const { entries, categoryKey, initialSlug, heavyAutoStart = false } = Astro.props;
 const initialEntry = entries.find((e) => e.slug === initialSlug) ?? entries[0];
 const initialIndex = entries.findIndex((e) => e.slug === initialEntry?.slug);
 
@@ -35,7 +40,13 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
 
 {
   initialEntry && (
-    <div class={styles.pane} data-preview-pane data-category-key={categoryKey} data-initial-slug={initialSlug}>
+    <div
+      class={styles.pane}
+      data-preview-pane
+      data-category-key={categoryKey}
+      data-initial-slug={initialSlug}
+      data-heavy-auto-start={heavyAutoStart ? 'true' : 'false'}
+    >
       <div class={styles.stage} data-stage aria-live="polite">
         <div class={styles.startOverlay} data-start-overlay hidden>
           <button type="button" class={styles.startButton} data-start-button>
@@ -96,6 +107,7 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
   if (paneEl && dataEl) {
     const entries: Entry[] = JSON.parse(dataEl.textContent ?? '[]');
     const categoryKey = paneEl.dataset.categoryKey!;
+    const heavyAutoStart = paneEl.dataset.heavyAutoStart === 'true';
     const slugs = entries.map((e) => e.slug);
 
     const stageEl = paneEl.querySelector<HTMLElement>('[data-stage]')!;
@@ -157,32 +169,69 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
     let paneVisible = true;
     let tabVisible = document.visibilityState === 'visible';
     let awaitingManualStart = false;
+    // Slot in attesa che il pannello entri in viewport per l'avvio automatico
+    // di un effetto Heavy (Effect Page, heavyAutoStart) — al più uno alla
+    // volta, sovrascritto/annullato da un cambio di selezione successivo.
+    let onBecomeVisible: (() => void) | null = null;
 
     function isHeavy(entry: Entry): boolean {
       return entry.preview.kind === 'webgl';
     }
 
-    function renderFallback(el: HTMLElement) {
-      el.classList.add('is-fallback');
-      const p = document.createElement('p');
-      p.className = 'text-small text-muted';
-      p.textContent =
-        'Anteprima WebGL disponibile nella scheda effetto (un solo contesto WebGL per pagina, PROJECT_SPEC.md §7).';
-      el.replaceChildren(p);
+    function renderPlaceholder(el: HTMLElement) {
+      el.classList.add('is-placeholder');
     }
 
-    async function mountLive(
-      entry: Entry,
-      el: HTMLElement,
-      opts: { reducedMotion: boolean },
-    ): Promise<PreviewModule | null> {
-      if (isHeavy(entry)) {
-        renderFallback(el);
-        return null;
-      }
+    async function mountLive(entry: Entry, el: HTMLElement, opts: { reducedMotion: boolean }): Promise<PreviewModule> {
       const mod = await loadModule(entry.preview.module);
       mod.mount(el, opts);
       return mod;
+    }
+
+    /**
+     * Decide se montare subito, mostrare il placeholder con "Avvia preview"
+     * (gate manuale), o attendere che il pannello entri in viewport (Heavy +
+     * heavyAutoStart). Ritorna il modulo montato, o null se in attesa di
+     * un'azione dell'utente o del viewport.
+     */
+    function scheduleMount(entry: Entry, el: HTMLElement, myGen: number): Promise<PreviewModule | null> {
+      const heavyGated = isHeavy(entry) && !heavyAutoStart;
+
+      if (heavyGated) {
+        // Category Page (o Effect Page senza heavyAutoStart): Heavy richiede
+        // sempre l'azione esplicita, indipendentemente da
+        // prefers-reduced-motion — Three.js non si carica finché l'utente
+        // non lo chiede (PROJECT_SPEC.md §7).
+        renderPlaceholder(el);
+        if (myGen === generation) showManualStart(true);
+        return Promise.resolve(null);
+      }
+
+      if (reducedMotion) {
+        // Il modulo monta comunque: mostra solo il proprio primo frame
+        // quieto, per contratto (MOTION_PRINCIPLES.md §6).
+        return mountLive(entry, el, { reducedMotion: true }).then((mod) => {
+          if (myGen === generation) showManualStart(true);
+          return mod;
+        });
+      }
+
+      if (isHeavy(entry) && !paneVisible) {
+        // heavyAutoStart è true qui (altrimenti heavyGated avrebbe già
+        // intercettato): avvio automatico solo al primo ingresso in viewport.
+        renderPlaceholder(el);
+        return new Promise((resolve) => {
+          onBecomeVisible = () => {
+            if (myGen !== generation) {
+              resolve(null);
+              return;
+            }
+            mountLive(entry, el, { reducedMotion: false }).then(resolve);
+          };
+        });
+      }
+
+      return mountLive(entry, el, { reducedMotion: false });
     }
 
     function updateMeta(entry: Entry, index: number) {
@@ -232,7 +281,6 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
       stageEl.appendChild(incoming);
 
       showManualStart(false);
-      const wantsManualStart = reducedMotion;
 
       if (outgoing) {
         outgoing.el.style.setProperty('--exit-x', direction === 'prev' ? '6%' : '-6%');
@@ -240,7 +288,7 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
         retireSlot(outgoing);
       }
 
-      mountLive(entry, incoming, { reducedMotion: wantsManualStart }).then((mod) => {
+      scheduleMount(entry, incoming, myGen).then((mod) => {
         if (myGen !== generation) {
           // Superata da un input successivo: pulizia immediata, mai un frame mostrato.
           mod?.destroy();
@@ -254,7 +302,6 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
           incoming.dataset.phase = 'entered';
         });
         updateMeta(entry, index);
-        if (wantsManualStart && mod) showManualStart(true);
         applyVisibility();
       });
     }
@@ -268,12 +315,12 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
       el.className = 'slot';
       el.dataset.phase = 'entered';
       stageEl.appendChild(el);
-      const wantsManualStart = reducedMotion;
-      mountLive(entry, el, { reducedMotion: wantsManualStart }).then((mod) => {
+      const myGen = generation;
+      scheduleMount(entry, el, myGen).then((mod) => {
+        if (myGen !== generation) return;
         current = { entry, el, module: mod };
         stageEl.classList.add('has-active');
         updateMeta(entry, index);
-        if (wantsManualStart && mod) showManualStart(true);
         applyVisibility();
       });
     })();
@@ -284,6 +331,7 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
       module?.destroy();
       markInactive(module);
       showManualStart(false);
+      el.classList.remove('is-placeholder');
       mountLive(entry, el, { reducedMotion: false }).then((mod) => {
         current = { entry, el, module: mod };
         applyVisibility();
@@ -299,10 +347,16 @@ const entriesJson = JSON.stringify(entries).replace(/</g, '\\u003c');
     prevButton.addEventListener('click', () => controller.prev());
     nextButton.addEventListener('click', () => controller.next());
 
-    // Pause/resume su visibilità (MOTION_PRINCIPLES.md §4).
+    // Pause/resume su visibilità (MOTION_PRINCIPLES.md §4); avvio automatico
+    // differito di un Heavy con heavyAutoStart al primo ingresso in viewport.
     const intersectionObserver = new IntersectionObserver(
       (obsEntries) => {
         for (const obsEntry of obsEntries) paneVisible = obsEntry.isIntersecting;
+        if (paneVisible && onBecomeVisible) {
+          const fn = onBecomeVisible;
+          onBecomeVisible = null;
+          fn();
+        }
         applyVisibility();
       },
       { threshold: 0.1 },

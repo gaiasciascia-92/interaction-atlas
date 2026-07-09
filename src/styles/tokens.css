@@ -69,7 +69,7 @@
   --duration-instant: 120ms; /* feedback: hover, focus */
   --duration-fast: 200ms; /* micro-transizioni UI */
   --duration-base: 320ms; /* transizioni standard */
-  --duration-page: 560ms; /* voltapagina della preview (atlas) */
+  --duration-page: 440ms; /* voltapagina della preview (atlas) */
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* uscite, entrate UI */
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* voltapagina */

@@ -70,9 +70,9 @@ Tre livelli, non negoziabili:
 |---|---|---|---|
 | **Lite** | hover in Home, righe di lista | CSS puro o video ≤ 1 MB in loop | Trascurabile |
 | **Live** | Category Page (pannello destro), Effect Page | Modulo GSAP/Canvas montato on-demand, smontato all'uscita | Medio |
-| **Heavy** | Solo Effect Page, solo effetti WebGL | Three.js lazy-load, avvio manuale o su viewport, un solo contesto WebGL attivo per pagina | Alto |
+| **Heavy** | Effect Page (avvio su viewport o manuale) e Category Page (solo avvio manuale) | Three.js lazy-load, un solo contesto WebGL attivo per pagina | Alto |
 
-Regola: **mai più di una preview Live/Heavy attiva contemporaneamente.** Quick Compare (V2) usa questa stessa regola con time-sharing o snapshot (vedi §9).
+Regola: **una sola preview Live/Heavy attiva per pagina.** "Attiva" significa montata e non in pausa: la breve sovrapposizione visiva del voltapagina (`MOTION_PRINCIPLES.md` §3) — l'uscente in dissolvenza, già in pausa, mentre l'entrante monta — è legittima e non viola la regola. Quick Compare (V2) usa questa stessa regola con time-sharing o snapshot (vedi §9).
 
 ## 8. Modello dati
 

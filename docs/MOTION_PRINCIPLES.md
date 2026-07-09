@@ -23,7 +23,7 @@ Un effetto spettacolare dentro la preview è il prodotto. Lo stesso effetto appl
 | `--duration-instant` | 120 ms | hover, focus, feedback immediato |
 | `--duration-fast` | 200 ms | comparsa/scomparsa di elementi piccoli |
 | `--duration-base` | 320 ms | transizioni di pagina e di sezione |
-| `--duration-page` | 560 ms | voltapagina della preview (linguaggio atlas) |
+| `--duration-page` | 440 ms | voltapagina della preview (linguaggio atlas) |
 | `--ease-out` | cubic-bezier(0.22,1,0.36,1) | quasi tutto |
 | `--ease-inout` | cubic-bezier(0.65,0,0.35,1) | voltapagina |
 
@@ -34,8 +34,8 @@ Un effetto spettacolare dentro la preview è il prodotto. Lo stesso effetto appl
 Specifica:
 
 1. L'utente cambia effetto (click su riga, ↑/↓ nella lista, ←/→ ovunque nella pagina).
-2. La preview corrente esce lateralmente (traslazione −6%, fade a 0, 200 ms, `--ease-out`).
-3. La preview entrante arriva dal lato opposto (traslazione da +6% a 0, fade da 0, 360 ms, `--ease-inout`), con un ritardo di 80 ms. Budget complessivo della sequenza: 200 + 80 + 360 = 560 ms = `--duration-page`.
+2. La preview corrente esce lateralmente (traslazione −6%, fade a 0, 200 ms, `--ease-out`), a partire dall'istante 0 della sequenza.
+3. La preview entrante arriva dal lato opposto (traslazione da +6% a 0, fade da 0, 360 ms, `--ease-inout`), con un ritardo di 80 ms **dall'istante 0** (non dalla fine dell'uscita: le due animazioni si sovrappongono, come una pagina che si volta). Budget complessivo della sequenza, dall'istante 0 alla fine dell'entrata: 80 + 360 = 440 ms = `--duration-page` (l'uscita, più breve, si conclude entro questo budget).
 4. Direzione semantica: effetto *successivo* → entra da destra; *precedente* → entra da sinistra. Come sfogliare un atlante, senza toccare lo scroll.
 
 Vincoli: mai più di un voltapagina in coda (input rapidi ⇒ si salta all'ultimo richiesto); durante il voltapagina la lista non si blocca.
