@@ -1,0 +1,79 @@
+---
+title: 'Smooth Scroll'
+category: 'motion'
+dna: ['Refined', 'Fluid', 'Rhythmic', 'Calm', 'Airy']
+summary: 'Lo scroll nativo scatta in incrementi discreti; qui il contenuto insegue il gesto con un piccolo ritardo elastico, come se avesse un peso proprio.'
+
+overview:
+  description: |
+    Lo scroll del browser è, per costruzione, immediato: la rotellina o il
+    gesto touch spostano il contenuto un pixel alla volta, senza inerzia
+    percepibile oltre quella nativa del sistema operativo. Lo smooth scroll
+    intercetta quell'input e lo traduce in un movimento che insegue il
+    valore target con un piccolo scarto temporale — il contenuto sembra
+    avere un peso, un attrito leggero, invece di rispondere in modo
+    meccanico. Ne risulta una scansione più lenta e più intenzionale della
+    pagina, dove ogni sezione arriva come un fotogramma invece che come uno
+    scatto.
+
+    Tecnicamente la posizione visibile non è la posizione di scroll nativa,
+    ma un valore interpolato (`lerp`) verso di essa: ad ogni frame la
+    distanza residua tra posizione corrente e target si riduce di una
+    piccola frazione, mai a zero istantaneamente. Le implementazioni di
+    produzione (Lenis, GSAP ScrollSmoother) intercettano l'evento di scroll
+    nativo e applicano l'interpolazione mantenendo intatta l'accessibilità
+    — barra di scroll reale, tasti pagina su/giù, screen reader — invece di
+    sostituirla con uno scroll "finto" a `position: fixed`.
+  bestFor:
+    - 'Portfolio fotografici a scorrimento lungo, dove il ritmo della lettura conta quanto le immagini stesse'
+    - 'Case study narrativi con più sezioni, dove un piccolo attrito enfatizza il passaggio da una all''altra'
+    - 'Pagine che combinano scroll e altri effetti scroll-driven (es. Blur Reveal), dove un''unica cadenza rende tutto più coerente'
+  avoid:
+    - 'Pagine dense di testo o dati, dove ogni millisecondo di ritardo tra input e risposta è percepito come lentezza, non come cura'
+    - 'Interfacce con molte interazioni da tastiera (form, tabelle), dove l''interpolazione può interferire con la prevedibilità dello scroll nativo'
+    - 'Dispositivi e utenze che dipendono da scroll assistivo (screen reader, switch access): l''interpolazione va sempre disattivata in loro presenza'
+
+build:
+  technology: ['JavaScript', 'requestAnimationFrame']
+  libraries:
+    - name: 'Lenis'
+      url: 'https://lenis.dev/'
+  difficulty: 3
+  performance: 'moderate'
+  notes: 'Il costo non è nel calcolo (un lerp per frame è banale), ma nel rischio di rompere l''accessibilità se lo scroll nativo viene sostituito invece che solo reinterpretato. Va sempre disattivato con prefers-reduced-motion e mai deve impedire il focus da tastiera di raggiungere un elemento fuori viewport.'
+
+knowledge:
+  origin: 'Tecnica nota fin dai primi anni 2010 (jQuery smoothscroll), tornata centrale nel web design "creative dev" dalla seconda metà degli anni 2010 grazie a librerie dedicate leggere e accessibili.'
+  popularizedBy:
+    - 'Lenis, oggi lo standard de facto per lo smooth scroll accessibile'
+    - 'GSAP ScrollSmoother, l''alternativa integrata nell''ecosistema GSAP/ScrollTrigger'
+  alternatives:
+    - 'Scroll nativo con `scroll-behavior: smooth` solo per gli anchor link, molto più leggero ma privo dell''effetto continuo'
+    - 'Nessun intervento: lo scroll nativo resta la scelta più accessibile e prevedibile in assoluto'
+  resources:
+    - title: 'Lenis — Smooth Scroll'
+      url: 'https://lenis.dev/'
+      type: 'demo'
+    - title: 'ScrollSmoother — documentazione ufficiale GSAP'
+      url: 'https://gsap.com/docs/v3/Plugins/ScrollSmoother/'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['blur-reveal', 'page-transition-cover']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] È l'effetto più rischioso del catalogo perché
+  è invisibile finché funziona e devastante per l'accessibilità quando è
+  implementato male. In un portfolio fotografico lo consiglierei solo se chi
+  lo implementa ha già verificato tab-order e screen reader — altrimenti,
+  meglio lo scroll nativo.
+
+preview:
+  kind: 'css'
+  lite: 'smooth-scroll'
+  module: 'src/previews/smooth-scroll.ts'
+
+addedAt: '2026-07-10'
+status: 'draft'
+---

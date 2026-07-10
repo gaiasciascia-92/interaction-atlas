@@ -1,0 +1,75 @@
+---
+title: 'Line Reveal Typography'
+category: 'motion'
+dna: ['Editorial', 'Kinetic', 'Rhythmic', 'Sharp', 'Dramatic']
+summary: 'Un titolo entra riga per riga, ciascuna mascherata finché non risale dal bordo inferiore: la tipografia diventa l''evento, non solo il contenuto.'
+
+overview:
+  description: |
+    Un blocco di testo — un titolo, una dichiarazione d'intenti, l'apertura
+    di un case study — non appare tutto insieme: ogni riga è racchiusa in
+    una maschera (`overflow: hidden`) e parte spostata sotto la propria
+    baseline, poi risale in posizione con un piccolo ritardo rispetto alla
+    riga precedente. Il risultato è una lettura scandita, dove la tipografia
+    stessa si comporta come materiale cinetico invece che come semplice
+    contenuto statico.
+
+    Tecnicamente ogni riga è avvolta in un elemento "maschera" a overflow
+    nascosto che ne definisce i confini visivi, mentre l'elemento di testo al
+    suo interno parte da `translateY(110%)` (leggermente oltre il 100% per
+    non lasciar intravedere il bordo) e opacità 0, per poi transitare a
+    `translateY(0)` e opacità 1. Lo scarto tra una riga e la successiva è un
+    breve ritardo fisso (stagger), non un secondo trigger: tutte le righe
+    condividono lo stesso istante di innesco, letto da un
+    `IntersectionObserver` sul blocco che le contiene.
+  bestFor:
+    - 'Titoli di apertura di case study o cover di progetto, dove il testo è il primo contenuto che il visitatore incontra'
+    - 'Dichiarazioni d''intenti o citazioni brevi, dove la scansione riga per riga rinforza la lettura'
+    - 'Sezioni "About" di un portfolio fotografico, dove poche righe di testo meritano un ingresso curato quanto le immagini'
+  avoid:
+    - 'Paragrafi lunghi o corpo di testo continuo, dove il ritardo cumulato tra le righe rallenta la lettura invece di accompagnarla'
+    - 'Testo che cambia dinamicamente (contatori, dati live), dove la maschera per riga non ha senso semantico'
+    - 'Pagine con già un altro reveal in ingresso (es. Blur Reveal sull''immagine hero): due tipi di ingresso nello stesso schermo competono per l''attenzione'
+
+build:
+  technology: ['CSS', 'JavaScript', 'IntersectionObserver']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: 'Nessuna libreria è indispensabile: la maschera per riga è puro CSS (transform/opacity), e IntersectionObserver innesca il reveal una sola volta. Per titoli che devono ri-fluire (resize, contenuto dinamico) o per split a parola/carattere, GSAP SplitText resta lo strumento di riferimento nel settore.'
+
+knowledge:
+  origin: 'Tecnica affine allo "stagger reveal" tipografico diffusa nel web design editoriale dalla seconda metà degli anni 2010, spesso realizzata a mano con wrapper e overflow:hidden prima che librerie dedicate la standardizzassero.'
+  popularizedBy:
+    - 'Siti di studio creativi e portfolio editoriali'
+    - 'GSAP SplitText, che ha reso lo split per riga/parola/carattere uno standard di settore'
+  alternatives:
+    - 'Blur Reveal applicato al blocco di testo intero, meno scandito ma più economico'
+    - 'Typewriter effect, carattere per carattere, più adatto a brevi etichette che a titoli'
+  resources:
+    - title: 'SplitText — documentazione ufficiale GSAP'
+      url: 'https://gsap.com/docs/v3/Plugins/SplitText/'
+      type: 'doc'
+    - title: 'Making Stagger Reveal Animations for Text'
+      url: 'https://tympanus.net/codrops/2020/06/17/making-stagger-reveal-animations-for-text/'
+      type: 'article'
+
+explore:
+  relatedEffects: ['blur-reveal']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Funziona perché imita il ritmo della lettura
+  ad alta voce: una riga, una pausa, la riga successiva. In un portfolio
+  fotografico lo riserverei a un unico titolo per pagina — usato più di una
+  volta smette di essere un accento e diventa una cadenza prevedibile, quasi
+  fastidiosa.
+
+preview:
+  kind: 'css'
+  lite: 'line-reveal-typography'
+  module: 'src/previews/line-reveal-typography.ts'
+
+addedAt: '2026-07-10'
+status: 'draft'
+---

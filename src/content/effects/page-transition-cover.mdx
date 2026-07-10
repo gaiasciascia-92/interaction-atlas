@@ -1,0 +1,80 @@
+---
+title: 'Page Transition Cover'
+category: 'motion'
+dna: ['Bold', 'Kinetic', 'Dimensional', 'Dramatic', 'Monumental']
+summary: 'Tra una pagina e l''altra, un pannello pieno copre tutto lo schermo, sostituisce il contenuto mentre è nascosto, poi si ritira: mai un salto secco.'
+
+overview:
+  description: |
+    Il cambio pagina di default del browser è un salto istantaneo: la
+    pagina precedente scompare, la nuova appare, senza alcun fotogramma
+    intermedio. Page Transition Cover inserisce un pannello a tinta piena
+    che entra a coprire l'intero schermo, nasconde per un istante il punto
+    di scambio, e si ritira rivelando il nuovo contenuto già pronto sotto di
+    sé. L'effetto comunica continuità — non "sei altrove", ma "la pagina si
+    è voltata" — ed è la stessa idea del voltapagina che l'Atlas usa nel
+    proprio pannello preview, qui applicata all'intera navigazione.
+
+    Tecnicamente richiede l'intercettazione della navigazione (via History
+    API o una libreria come Barba.js, oppure nativamente con la View
+    Transition API dove supportata) per poter animare l'uscita prima che il
+    browser sostituisca il documento. Il pannello entra con una singola
+    proprietà transform (traslazione o scala, mai entrambe insieme per
+    restare leggero), il contenuto sotto viene scambiato mentre è
+    completamente coperto, poi il pannello esce dal lato opposto o con la
+    stessa traiettoria invertita.
+  bestFor:
+    - 'Portfolio con poche pagine di progetto, dove ogni passaggio è un momento che vale la pena marcare'
+    - 'Siti a narrazione forte (studio, agenzia), dove la transizione stessa comunica un tono editoriale preciso'
+    - 'Cover di progetto che condividono un colore o una texture, resi ancora più coerenti da un pannello che li anticipa'
+  avoid:
+    - 'Siti con navigazione frequente tra molte pagine (cataloghi, blog): il costo percepito di ogni passaggio si accumula rapidamente'
+    - 'Connessioni lente o contenuti pesanti da caricare, dove il pannello rischia di restare fermo più a lungo del previsto, sembrando un errore'
+    - 'Prime visite senza alcuna aspettativa di stile stabilita: una transizione vistosa su una landing sconosciuta può leggersi come lentezza, non come cura'
+
+build:
+  technology: ['JavaScript', 'GSAP', 'History API']
+  libraries:
+    - name: 'GSAP'
+      url: 'https://gsap.com/'
+    - name: 'Barba.js'
+      url: 'https://barba.js.org/'
+  difficulty: 4
+  performance: 'moderate'
+  notes: 'Il costo maggiore non è l''animazione ma l''intercettazione della navigazione stessa: va sempre garantito un fallback funzionante (link diretto, back/forward del browser, JavaScript disattivato) prima di aggiungere il pannello.'
+
+knowledge:
+  origin: 'Pattern affermato nei siti "creative dev" dalla seconda metà degli anni 2010, spesso costruito a mano sopra pushState/popstate prima che librerie dedicate (Barba.js) e poi la View Transition API nativa lo rendessero più diretto da implementare.'
+  popularizedBy:
+    - 'Barba.js, la libreria più citata per le transizioni di pagina lato JavaScript'
+    - 'Portfolio di studi creativi e agenzie digitali'
+  alternatives:
+    - 'View Transition API nativa, senza libreria, dove il supporto browser è sufficiente'
+    - 'Nessuna transizione: il salto istantaneo resta la scelta più veloce e più prevedibile'
+  resources:
+    - title: 'Creating Custom Page Transitions in Astro with Barba.js and GSAP'
+      url: 'https://tympanus.net/codrops/2026/04/08/creating-custom-page-transitions-in-astro-with-barba-js-and-gsap/'
+      type: 'article'
+    - title: 'View Transition API — MDN'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['smooth-scroll']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Il pannello funziona solo se il tempo in cui
+  copre lo schermo è quasi impercettibile: oltre 500-600ms smette di
+  sembrare un voltapagina e diventa un caricamento travestito. In un
+  portfolio fotografico lo terrei su un'unica direzione, mai simmetrico in
+  entrambi i sensi di navigazione — la direzione è parte del significato.
+
+preview:
+  kind: 'gsap'
+  lite: 'page-transition-cover'
+  module: 'src/previews/page-transition-cover.ts'
+
+addedAt: '2026-07-10'
+status: 'draft'
+---
