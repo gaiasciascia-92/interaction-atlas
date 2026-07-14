@@ -11,6 +11,7 @@ Fonte unica di verità: `src/styles/tokens.css`. Questo documento è la specific
   /* Palette base */
   --color-bg:        #F7F6F3;  /* Warm White — unico fondo di pagina */
   --color-bg-tint:   #F1EFEA;  /* Warm White più profondo — bande di "carta" (TASK_013) */
+  --color-on-cover:  var(--color-bg);  /* alias semantico: testo pieno sopra la cover Purple della Home (TASK_016) */
   --color-ink:       #1E1B1C;  /* Black — testo primario */
   --color-primary:   #5C5D8D;  /* Purple — interazione */
   --color-warm:      #FFA630;  /* Orange — evidenziazione non testuale */
@@ -38,8 +39,11 @@ Fonte unica di verità: `src/styles/tokens.css`. Questo documento è la specific
 | Primary / Bg | 4.6:1 | Testo ≥ 16 px o ≥ 14 px semibold (AA) |
 | Warm / Bg | 1.9:1 | **Mai testo.** Solo marker, riempimenti grafici, sottolineature |
 | Accent / Bg | 2.5:1 | **Mai testo.** Solo indicatori puntuali ≥ 3 px di spessore |
+| On-cover / Primary | 5.71:1 | Testo pieno sulla cover Purple della Home (titolo, sottotitolo, didascalia) — mai in opacità ridotta |
 
 `--color-bg-tint` (TASK_013) è una variante più profonda di Bg, riservata alle bande di "carta" (`DESIGN_SYSTEM.md` §3). Verificato: la luminanza relativa scende di meno del 7% rispetto a Bg, quindi ogni coppia della tabella sopra resta nello stesso ordine di grandezza su Bg-tint (Ink e Ink-60 restano ampiamente leggibili; Primary resta sopra soglia AA per testo ≥14px semibold; Warm e Accent restano non testuali per costruzione, quindi il calo non è rilevante).
+
+`--color-on-cover` (TASK_016) è un alias semantico di Bg, non un nuovo colore: esiste per rendere esplicito, nel codice, ogni punto dove un testo Warm White poggia sul Purple invece che sulla pagina — un contesto con un vincolo di contrasto diverso (verificato sopra) e dove le varianti attenuate per opacità di Ink (pensate per Bg) non sono applicabili. Qualunque derivato di `--color-on-cover` usato in opacità ridotta richiede una nuova verifica di contrasto prima dell'uso (regola di governo §8.2).
 
 ## 2. Spaziatura (base 8 px)
 

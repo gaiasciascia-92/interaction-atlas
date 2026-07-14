@@ -10,20 +10,21 @@ Legenda: `┄` divider 1 px · `[ ]` area interattiva · `▸` marker di selezio
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Interaction Atlas                                    [Cerca ⌘K]   │  nav, 64px
+│  Interaction Atlas                                    [Cerca ⌘K]   │  nav, 64px — su carta
 │┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄│
-│                                                                     │
-│  Un atlante di interazioni                                          │  display, hero-esemplare
-│  per portfolio contemporanei.                          col 1–8      │  (Magnetic Cursor, hover)
-│  ↳ Magnetic Cursor — dal catalogo                       text-meta    │  micro-didascalia → /e/…
-│                                                                     │
-│  Cataloga, confronta e scegli l'interazione                         │  sottotitolo
-│  giusta nel minor tempo possibile.                     ink-60       │
-│                                                                     │
-│  [ Cerca un effetto, un componente, una sensazione… ]  col 1–7      │  search, sempre visibile
-│                                                                     │
-│┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄│
-│                                          ┌──────────────────────┐   │
+│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │  cover Purple, piena
+│ ░░                                                                ░│  larghezza (TASK_016) —
+│ ░░  Un atlante di interazioni                                     ░│  display, hero-esemplare,
+│ ░░  per portfolio contemporanei.                        col 1–8   ░│  testo on-cover (Bg pieno)
+│ ░░  ↳ Magnetic Cursor — dal catalogo              text-meta       ░│  freccia in Warm (grafica)
+│ ░░                                                                ░│
+│ ░░  Cataloga, confronta e scegli l'interazione                    ░│  sottotitolo, on-cover
+│ ░░  giusta nel minor tempo possibile.                             ░│
+│ ░░                                                                ░│
+│ ░░  [ Cerca un effetto, un componente, una sensazione… ]  col 1–7 ░│  search: campo su Bg,
+│ ░░                                                                ░│  testo Ink (non on-cover)
+│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │  ← stacco netto, no gradiente
+│                                          ┌──────────────────────┐   │  carta tinta (bg-tint)
 │  INDICE                                  │                      │   │
 │                                          │                      │   │
 │  [ Interactions              24 ]        │    preview Lite      │   │
@@ -51,13 +52,14 @@ Legenda: `┄` divider 1 px · `[ ]` area interattiva · `▸` marker di selezio
 ```
 
 Comportamenti:
+- **Cover Purple (approvata dal curatore, TASK_016).** Solo sulla Home: titolo, sottotitolo, didascalia dell'esemplare e barra di ricerca poggiano su un blocco a piena larghezza in `--color-primary` — l'unico punto di tutto il prodotto dove il Purple è una superficie estesa, non un accento (`DESIGN_SYSTEM.md` §3). Sopra il Purple il testo è sempre `--color-on-cover` pieno, mai in opacità ridotta; la freccia `↳` resta in Warm (elemento grafico, non testo). Il campo di ricerca ha un fondo `--color-bg` solido con testo Ink — un rettangolo chiaro appoggiato sul Purple, non un campo trasparente. La nav resta sulla carta, sopra la cover; la cover finisce con uno stacco netto (transizione secca, nessun gradiente) sulla carta tinta sottostante. Nessuna nuova animazione: l'unico movimento resta l'esemplare Magnetic Cursor già esistente sul titolo, di cui cambia solo il colore del testo.
 - **Hero-esemplare (approvato dal curatore, 2026-07-08).** Il titolo display non è telaio inerte: è il primo esemplare dell'atlante, esposto ed etichettato come tale. Al passaggio del mouse reagisce con l'effetto Magnetic Cursor del catalogo (attrazione leggera, raggio contenuto — riusa la logica condivisa di `src/previews/magnetic-cursor.ts`, mai una riscrittura), sempre leggibile e selezionabile. Sotto il titolo, la micro-didascalia `↳ Magnetic Cursor — dal catalogo` (`--text-meta`) linka a `/e/magnetic-cursor`: è la dichiarazione esplicita che rende l'eccezione "documentata" e non un'incoerenza silenziosa (vedi `MOTION_PRINCIPLES.md` §1). Reagisce solo su hover reale (media query `(hover: hover)`, mai animazione autonoma); `prefers-reduced-motion` → nessun movimento; touch/mobile → titolo statico, GSAP mai caricato.
 - Hover su una riga categoria → la preview Lite (CSS-only, mai GSAP/WebGL) compare a destra con fade `--duration-fast`. Uscita hover → resta l'ultima preview, attenuata al 60% (evita lampeggi). Ogni preview Lite è una micro-demo rappresentativa della categoria (loop lento, discreto, in pausa con `prefers-reduced-motion`): default provvisori del curatore in attesa degli "effetti vetrina" definitivi (`CHANGELOG.md`).
 - Le righe categoria mostrano il conteggio voci in Geist Mono `--text-caption`.
 - Collections e Playground **non compaiono** finché la rispettiva fase non è rilasciata (decisione F: si mostra solo ciò che è finito). L'indice V1 elenca quindi quattro righe: Interactions, Motion, Visual Effects, Components.
 - "Aggiunti di recente": le ultime 3–5 voci `published` per `addedAt`.
 
-Mobile (< 768): preview hover assente (niente hover su touch); le righe categoria mostrano una thumbnail statica 64×40 a destra. Search sotto il sottotitolo, full-width.
+Mobile (< 768): preview hover assente (niente hover su touch); le righe categoria mostrano una thumbnail statica 64×40 a destra. Search sotto il sottotitolo, full-width. La cover Purple resta anche su mobile, piena larghezza, con lo stesso stacco netto sulla carta tinta.
 
 ---
 

@@ -47,6 +47,10 @@ Regola generale: a riposo, il colore vive nella carta (bg-tint), nella segnaleti
 
 `--color-bg-tint` (`DESIGN_TOKENS.md` §1) è la carta: una variante di Warm White leggermente più profonda, riservata a bande editoriali a piena larghezza (Home Indice/Aggiunti di recente, `AppFooter`) — mai su superfici interattive (bottoni, righe selezionabili, contenitori preview). La transizione tra una banda di carta e il resto della pagina è sempre netta, marcata da un divider — mai un gradiente. `--color-warm-soft` è il velo Orange per sottolineature e marker grafici, alla stessa condizione di Warm: mai testo.
 
+Il Purple come superficie estesa è ammesso in un solo luogo, la cover della Home; sopra di esso il testo è sempre `--color-on-cover` pieno, mai in opacità (TASK_016).
+
+Questa è l'unica eccezione alla regola generale qui sopra: non introduce un secondo fondo di pagina (resta un blocco interno, non sostituisce Warm White) e non è ripetibile altrove senza una nuova approvazione — un secondo uso del Purple come superficie estesa non è "coerenza", è la regola che smette di valere.
+
 ## 4. Superfici, profondità, bordi
 
 - **Nessuna card pesante.** I raggruppamenti si fanno con spazio bianco e divider da 1 px in `--color-divider`, non con contenitori.

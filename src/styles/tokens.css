@@ -9,6 +9,7 @@
   /* --- 1. Colore — palette base ------------------------------ */
   --color-bg: #f7f6f3; /* Warm White — unico fondo di pagina */
   --color-bg-tint: #f1efea; /* Warm White più profondo — bande di "carta" (TASK_013) */
+  --color-on-cover: var(--color-bg); /* alias semantico: testo pieno sopra la cover Purple della Home (TASK_016) — mai riferirsi a --color-bg direttamente in quel contesto */
   --color-ink: #1e1b1c; /* Black — testo primario */
   --color-primary: #5c5d8d; /* Purple — interazione */
   --color-warm: #ffa630; /* Orange — evidenziazione non testuale */

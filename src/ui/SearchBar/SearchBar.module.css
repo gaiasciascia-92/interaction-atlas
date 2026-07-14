@@ -3,7 +3,11 @@
   font: inherit;
   font-size: var(--text-body);
   color: var(--color-ink);
-  background: none;
+  /* Fondo pieno, non trasparente (TASK_016): il campo poggia sulla cover
+     Purple della Home come un rettangolo chiaro, non un contorno sul
+     colore sottostante — contrasto Ink/Bg pieno, indipendente da dove il
+     componente viene montato. */
+  background: var(--color-bg);
   border: var(--border-thin);
   border-radius: var(--radius-s);
   padding: var(--space-2) var(--space-3);

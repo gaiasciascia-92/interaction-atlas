@@ -39,22 +39,22 @@ const recent = [...visibleEffects, ...visibleComponents]
 ---
 
 <BaseLayout title="Atlas">
-  <PageShell>
-    <div class="hero" data-hero>
-      <h1 class="text-display" data-hero-title>Un atlante di interazioni per portfolio contemporanei.</h1>
-      <a href="/e/magnetic-cursor" class="heroCaption text-meta">
-        <span class="heroCaptionArrow" aria-hidden="true">↳</span> Magnetic Cursor — dal catalogo
-      </a>
-      <p class="text-body text-muted">
-        Cataloga, confronta e scegli l'interazione giusta nel minor tempo possibile.
-      </p>
-    </div>
-    <div class="searchWrap">
-      <SearchBar />
-    </div>
-  </PageShell>
-
-  <PageShell><hr class="hr" /></PageShell>
+  <div class="coverBand">
+    <PageShell>
+      <div class="hero" data-hero>
+        <h1 class="text-display" data-hero-title>Un atlante di interazioni per portfolio contemporanei.</h1>
+        <a href="/e/magnetic-cursor" class="heroCaption text-meta">
+          <span class="heroCaptionArrow" aria-hidden="true">↳</span> Magnetic Cursor — dal catalogo
+        </a>
+        <p class="text-body">
+          Cataloga, confronta e scegli l'interazione giusta nel minor tempo possibile.
+        </p>
+      </div>
+      <div class="searchWrap">
+        <SearchBar />
+      </div>
+    </PageShell>
+  </div>
 
   <div class="paperBand">
     <PageShell>
@@ -169,22 +169,53 @@ const recent = [...visibleEffects, ...visibleComponents]
 
   .hero [data-hero-title] {
     will-change: transform;
+    color: var(--color-on-cover);
+  }
+
+  /* Sottotitolo: on-cover pieno, non il consueto text-muted (ink-60 è
+     calibrato su Bg, non su Primary — TASK_016, "verifica ogni derivato"). */
+  .hero p {
+    color: var(--color-on-cover);
   }
 
   .heroCaption {
-    color: var(--color-ink-60);
-    text-decoration: none;
-    margin-block-start: calc(var(--space-2) * -1);
+    /* Pieno, mai in opacità ridotta sul Purple (TASK_016): l'opacità è
+       calibrata sulla luminanza di Bg, non di Primary, e fallirebbe il
+       contrasto. Il feedback di hover è sulla sottolineatura (sotto), non
+       sul colore del testo. */
+    color: var(--color-on-cover);
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-on-cover) 35%, transparent);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--duration-instant) var(--ease-out);
   }
 
   .heroCaption:hover {
-    color: var(--color-primary);
+    /* Warm nel suo ruolo documentato — sottolineatura grafica, mai testo
+       (DESIGN_SYSTEM.md §3) — non un cambio di colore del testo, che su
+       Primary non avrebbe altrove un candidato leggibile. */
+    text-decoration-color: var(--color-warm);
+  }
+
+  .heroCaption:focus-visible {
+    /* L'outline globale (base.css) è Purple: invisibile su un fondo
+       Purple. Unico punto dell'app dove il focus ring cambia colore. */
+    outline-color: var(--color-on-cover);
   }
 
   /* Marker grafico (TASK_013): la freccia è un elemento grafico, non testo —
      unico punto della didascalia in Orange. */
   .heroCaptionArrow {
     color: var(--color-warm);
+  }
+
+  /* Cover Purple a piena larghezza (TASK_016): unico punto del prodotto
+     dove il Purple è superficie estesa, non accento (DESIGN_SYSTEM.md §3).
+     Stesso principio full-bleed di AppNav/AppFooter/.paperBand: il div non
+     eredita alcun vincolo di larghezza da <main>. Finisce con una
+     transizione secca (nessun gradiente) sulla banda di carta seguente. */
+  .coverBand {
+    background: var(--color-primary);
   }
 
   /* Banda di carta a piena larghezza (TASK_013): il div non eredita alcun
