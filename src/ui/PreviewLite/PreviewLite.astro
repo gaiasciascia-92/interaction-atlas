@@ -30,7 +30,12 @@ const { name, count, category } = Astro.props;
       category === 'motion' && <div class={styles.motionPhoto} />
     }
     {
-      category === 'visual-effects' && <div class={styles.veLayer} />
+      category === 'visual-effects' && (
+        <>
+          <div class={styles.veLayer} />
+          <span class={styles.veAccent} aria-hidden="true" />
+        </>
+      )
     }
     {
       category === 'components' && (

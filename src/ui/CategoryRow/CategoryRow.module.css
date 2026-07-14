@@ -19,7 +19,11 @@
 }
 
 .count {
-  color: var(--color-ink-60);
+  /* Segnaletica (TASK_013): il conteggio è colore, non solo testo attenuato. */
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 500;
   flex-shrink: 0;
 }
 

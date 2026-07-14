@@ -32,7 +32,9 @@
   bottom: -2px;
   width: 100%;
   height: 1px;
-  background: var(--color-ink);
+  /* Colore deliberato (TASK_013): la sottolineatura è esattamente il ruolo
+     documentato di Orange in DESIGN_SYSTEM.md §3 ("sottolineature grafiche"). */
+  background: var(--color-warm);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 240ms var(--ease-out); /* token-guard: allow */

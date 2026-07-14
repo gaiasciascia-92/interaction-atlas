@@ -19,6 +19,6 @@ const { name, count, href, category } = Astro.props;
   <a href={href} class={styles.row} data-category={category}>
     <span class={styles.name}>{name}</span>
     <span class={styles.thumb} aria-hidden="true"></span>
-    <span class={`${styles.count} text-meta`}>{count}</span>
+    <span class={styles.count}>{count}</span>
   </a>
 </li>

@@ -19,7 +19,8 @@
 .page-transition-cover-panel {
   position: absolute;
   inset: 0;
-  background: var(--color-ink);
+  /* Colore deliberato (TASK_013): Purple, non più un pannello nero neutro. */
+  background: var(--color-primary);
   transform: translateY(100%);
   will-change: transform;
 }

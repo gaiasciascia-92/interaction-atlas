@@ -8,7 +8,9 @@
 .photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--color-ink-40), var(--color-primary-soft) 55%, var(--color-warm));
+  /* Colore deliberato (TASK_013): Purple che si risolve in Orange — stesso
+     gradiente di PreviewLite.module.css .motionPhoto, aggiornati in coppia. */
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-warm-soft) 55%, var(--color-warm));
   filter: blur(16px);
   opacity: 0.4;
   /* Durata libera (non --duration-*): il motion delle preview non è governato da MOTION_PRINCIPLES.md, solo quello del telaio. */

@@ -9,7 +9,7 @@ I valori numerici definitivi vivono in `DESIGN_TOKENS.md`. Questo documento defi
 ## 1. Layout
 
 - Griglia a **12 colonne**, gutter 24 px, margini 48 px desktop / 24 px tablet / 16 px mobile.
-- **Max-width 1500 px**, centrata. Oltre, solo Warm White.
+- **Max-width 1500 px**, centrata. Oltre, solo Warm White — eccezione: le bande di "carta" (`--color-bg-tint`, §3) sono le uniche superfici autorizzate a estendersi fino al bordo del viewport (TASK_013).
 - Sistema di spaziatura a base **8 px** (mezzo passo 4 px consentito solo per allineamenti ottici interni ai componenti).
 - Desktop first; breakpoint in `DESIGN_TOKENS.md` §7.
 - Le pagine sono costruite come **flussi editoriali verticali**, sezionati da divider sottili — mai come dashboard a pannelli.
@@ -43,7 +43,9 @@ Palette fissa, cinque valori, con **ruoli semantici vincolanti**:
 | Orange | `#FFA630` | Evidenziazione non testuale: marker, indicatori di difficoltà, sottolineature grafiche | **Mai come colore di testo su Warm White** (1.9:1). Mai su superfici estese |
 | Green | `#34B3A9` | Solo accento puntuale: indicatore "live", badge "nuovo" | Massimo un'occorrenza per viewport. Mai testo su fondo chiaro |
 
-Regola generale: una schermata a riposo è **bicroma** (Warm White + Black nelle sue opacità). Purple appare solo dove c'è interazione. Orange e Green sono eventi rari.
+Regola generale: a riposo, il colore vive nella carta (bg-tint), nella segnaletica puntuale e negli esemplari; mai su superfici interattive estese né come decorazione del telaio.
+
+`--color-bg-tint` (`DESIGN_TOKENS.md` §1) è la carta: una variante di Warm White leggermente più profonda, riservata a bande editoriali a piena larghezza (Home Indice/Aggiunti di recente, `AppFooter`) — mai su superfici interattive (bottoni, righe selezionabili, contenitori preview). La transizione tra una banda di carta e il resto della pagina è sempre netta, marcata da un divider — mai un gradiente. `--color-warm-soft` è il velo Orange per sottolineature e marker grafici, alla stessa condizione di Warm: mai testo.
 
 ## 4. Superfici, profondità, bordi
 

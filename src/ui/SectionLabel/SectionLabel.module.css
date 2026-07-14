@@ -1,8 +1,24 @@
 .label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   font-size: var(--text-label);
   line-height: 1.4;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-ink-60);
+}
+
+/* Marker grafico (TASK_013): segnaletica puntuale, non testo — un piccolo
+   quadrato pieno in Purple prima dell'etichetta. Generato via ::before per
+   non introdurre markup: un pseudo-elemento senza `content` testuale non è
+   annunciato dagli screen reader. */
+.label::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--space-1);
+  height: var(--space-1);
+  background: var(--color-primary);
 }

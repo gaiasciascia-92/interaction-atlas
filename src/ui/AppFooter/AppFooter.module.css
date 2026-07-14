@@ -1,5 +1,7 @@
 .footer {
-  background: var(--color-bg);
+  /* Banda di carta a piena larghezza (TASK_013): il <footer> non è vincolato
+     al max-width di PageShell, quindi il fondo copre l'intero viewport. */
+  background: var(--color-bg-tint);
 }
 
 .dividerRow {

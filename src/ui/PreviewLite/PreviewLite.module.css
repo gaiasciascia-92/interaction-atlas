@@ -34,7 +34,8 @@
    (animation-duration forzata quasi a zero, un solo iteration-count). */
 
 /* Interactions — suggestione magnetica: un punto che viene "attratto" al
-   centro con un assestamento elastico, si ferma, poi si ricompone. */
+   centro con un assestamento elastico, si ferma, poi si ricompone. Colore
+   deliberato (TASK_013): Orange, la stessa energia del marker grafico. */
 .interactionsDot {
   position: absolute;
   top: 50%;
@@ -43,7 +44,7 @@
   height: 12px;
   margin: -6px;
   border-radius: var(--radius-pill);
-  background: var(--color-ink);
+  background: var(--color-warm);
 }
 
 .panel:global(.is-active) .interactionsDot,
@@ -63,12 +64,14 @@
   }
 }
 
-/* Motion — loop di blur reveal: stessa tecnica di src/previews/blur-reveal.css,
-   qui in loop invece che scroll-triggered una tantum. */
+/* Motion — loop di blur reveal: stessa tecnica di src/previews/blur-reveal.css
+   (gradiente identico, aggiornato in coppia — TASK_013), qui in loop invece
+   che scroll-triggered una tantum. Purple che si risolve in Orange: colore
+   deliberato, non più un grigio neutro. */
 .motionPhoto {
   position: absolute;
   inset: var(--space-3);
-  background: linear-gradient(135deg, var(--color-ink-40), var(--color-primary-soft) 55%, var(--color-warm));
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-warm-soft) 55%, var(--color-warm));
   filter: blur(16px);
   opacity: 0.4;
 }
@@ -94,11 +97,12 @@
 }
 
 /* Visual Effects — wobble/distorsione via filtri CSS: nessun asset, solo
-   un lieve hue-rotate + scala/skew sul gradiente di sfondo. */
+   un lieve hue-rotate + scala/skew sul gradiente di sfondo. Colore
+   deliberato (TASK_013): Purple → Orange invece di un grigio neutro. */
 .veLayer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--color-ink-40), var(--color-primary-soft));
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-warm-soft));
 }
 
 .panel:global(.is-active) .veLayer,
@@ -121,6 +125,20 @@
   }
 }
 
+/* Unico punto di tutta la Home dove compare Green (DESIGN_SYSTEM.md §3:
+   "massimo un'occorrenza per viewport") — sicuro perché is-active/is-dimmed
+   sono mutuamente esclusivi tra i quattro pannelli: al massimo uno di questi
+   pannelli è visibile alla volta. Indicatore puntuale, non testo. */
+.veAccent {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: var(--space-1);
+  height: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+}
+
 /* Components — griglia editoriale che si compone: blocchi che entrano in
    sequenza sfalsata, restano, poi si ritirano per ripartire. */
 .componentsGrid {
@@ -132,8 +150,9 @@
   gap: var(--space-1);
 }
 
+/* Colore deliberato (TASK_013): blocchi in Purple, non più grigio neutro. */
 .componentsGrid span {
-  background: var(--color-ink-40);
+  background: var(--color-primary);
   opacity: 0;
   transform: translateY(6px);
 }

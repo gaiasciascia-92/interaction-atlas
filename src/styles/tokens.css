@@ -8,6 +8,7 @@
 :root {
   /* --- 1. Colore — palette base ------------------------------ */
   --color-bg: #f7f6f3; /* Warm White — unico fondo di pagina */
+  --color-bg-tint: #f1efea; /* Warm White più profondo — bande di "carta" (TASK_013) */
   --color-ink: #1e1b1c; /* Black — testo primario */
   --color-primary: #5c5d8d; /* Purple — interazione */
   --color-warm: #ffa630; /* Orange — evidenziazione non testuale */
@@ -22,6 +23,7 @@
 
   /* Interazione */
   --color-primary-soft: rgb(92 93 141 / 0.08); /* fondo selezione */
+  --color-warm-soft: rgb(255 166 48 / 0.14); /* velo Orange — sottolineature/marker grafici (TASK_013) */
   --color-focus: var(--color-primary);
 
   /* --- 2. Spaziatura (base 8px) ------------------------------ */

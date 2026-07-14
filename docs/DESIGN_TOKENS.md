@@ -10,6 +10,7 @@ Fonte unica di verità: `src/styles/tokens.css`. Questo documento è la specific
 :root {
   /* Palette base */
   --color-bg:        #F7F6F3;  /* Warm White — unico fondo di pagina */
+  --color-bg-tint:   #F1EFEA;  /* Warm White più profondo — bande di "carta" (TASK_013) */
   --color-ink:       #1E1B1C;  /* Black — testo primario */
   --color-primary:   #5C5D8D;  /* Purple — interazione */
   --color-warm:      #FFA630;  /* Orange — evidenziazione non testuale */
@@ -24,6 +25,7 @@ Fonte unica di verità: `src/styles/tokens.css`. Questo documento è la specific
 
   /* Interazione */
   --color-primary-soft: rgb(92 93 141 / 0.08);  /* fondo selezione   */
+  --color-warm-soft:    rgb(255 166 48 / 0.14); /* velo Orange — sottolineature/marker grafici (TASK_013) */
   --color-focus:        var(--color-primary);
 }
 ```
@@ -36,6 +38,8 @@ Fonte unica di verità: `src/styles/tokens.css`. Questo documento è la specific
 | Primary / Bg | 4.6:1 | Testo ≥ 16 px o ≥ 14 px semibold (AA) |
 | Warm / Bg | 1.9:1 | **Mai testo.** Solo marker, riempimenti grafici, sottolineature |
 | Accent / Bg | 2.5:1 | **Mai testo.** Solo indicatori puntuali ≥ 3 px di spessore |
+
+`--color-bg-tint` (TASK_013) è una variante più profonda di Bg, riservata alle bande di "carta" (`DESIGN_SYSTEM.md` §3). Verificato: la luminanza relativa scende di meno del 7% rispetto a Bg, quindi ogni coppia della tabella sopra resta nello stesso ordine di grandezza su Bg-tint (Ink e Ink-60 restano ampiamente leggibili; Primary resta sopra soglia AA per testo ≥14px semibold; Warm e Accent restano non testuali per costruzione, quindi il calo non è rilevante).
 
 ## 2. Spaziatura (base 8 px)
 

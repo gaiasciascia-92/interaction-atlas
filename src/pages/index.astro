@@ -42,7 +42,9 @@ const recent = [...visibleEffects, ...visibleComponents]
   <PageShell>
     <div class="hero" data-hero>
       <h1 class="text-display" data-hero-title>Un atlante di interazioni per portfolio contemporanei.</h1>
-      <a href="/e/magnetic-cursor" class="heroCaption text-meta">↳ Magnetic Cursor — dal catalogo</a>
+      <a href="/e/magnetic-cursor" class="heroCaption text-meta">
+        <span class="heroCaptionArrow" aria-hidden="true">↳</span> Magnetic Cursor — dal catalogo
+      </a>
       <p class="text-body text-muted">
         Cataloga, confronta e scegli l'interazione giusta nel minor tempo possibile.
       </p>
@@ -54,48 +56,50 @@ const recent = [...visibleEffects, ...visibleComponents]
 
   <PageShell><hr class="hr" /></PageShell>
 
-  <PageShell>
-    <section class="indexSection">
-      <div class="indexHeader">
-        <SectionLabel as="h2">Indice</SectionLabel>
-      </div>
-      <nav class="rowsCol" aria-label="Indice categorie" data-category-rows>
-        <ul class="rows">
-          {categoryRows.map((c) => <CategoryRow name={c.name} count={c.count} href={c.href} category={c.slug} />)}
-        </ul>
-      </nav>
-      <div class="previewCol">
-        <div class="previewStack">
-          {categoryRows.map((c) => <PreviewLite name={c.name} count={c.count} category={c.slug} />)}
+  <div class="paperBand">
+    <PageShell>
+      <section class="indexSection">
+        <div class="indexHeader">
+          <SectionLabel as="h2">Indice</SectionLabel>
         </div>
-      </div>
-    </section>
-  </PageShell>
+        <nav class="rowsCol" aria-label="Indice categorie" data-category-rows>
+          <ul class="rows">
+            {categoryRows.map((c) => <CategoryRow name={c.name} count={c.count} href={c.href} category={c.slug} />)}
+          </ul>
+        </nav>
+        <div class="previewCol">
+          <div class="previewStack">
+            {categoryRows.map((c) => <PreviewLite name={c.name} count={c.count} category={c.slug} />)}
+          </div>
+        </div>
+      </section>
+    </PageShell>
 
-  {
-    recent.length > 0 && (
-      <>
-        <PageShell>
-          <hr class="hr" />
-        </PageShell>
-        <PageShell>
-          <section class="recentSection">
-            <SectionLabel as="h2">Aggiunti di recente</SectionLabel>
-            <ul class="recentRows">
-              {recent.map((entry) => (
-                <EntryRow
-                  title={entry.data.title}
-                  category={CATEGORY_META[entry.data.category].label}
-                  dna={entry.data.dna}
-                  href={`/e/${entry.id}`}
-                />
-              ))}
-            </ul>
-          </section>
-        </PageShell>
-      </>
-    )
-  }
+    {
+      recent.length > 0 && (
+        <>
+          <PageShell>
+            <hr class="hr" />
+          </PageShell>
+          <PageShell>
+            <section class="recentSection">
+              <SectionLabel as="h2">Aggiunti di recente</SectionLabel>
+              <ul class="recentRows">
+                {recent.map((entry) => (
+                  <EntryRow
+                    title={entry.data.title}
+                    category={CATEGORY_META[entry.data.category].label}
+                    dna={entry.data.dna}
+                    href={`/e/${entry.id}`}
+                  />
+                ))}
+              </ul>
+            </section>
+          </PageShell>
+        </>
+      )
+    }
+  </div>
 </BaseLayout>
 
 <script>
@@ -175,6 +179,20 @@ const recent = [...visibleEffects, ...visibleComponents]
 
   .heroCaption:hover {
     color: var(--color-primary);
+  }
+
+  /* Marker grafico (TASK_013): la freccia è un elemento grafico, non testo —
+     unico punto della didascalia in Orange. */
+  .heroCaptionArrow {
+    color: var(--color-warm);
+  }
+
+  /* Banda di carta a piena larghezza (TASK_013): il div non eredita alcun
+     vincolo di larghezza da <main>, stesso principio di AppNav/AppFooter —
+     transizione netta segnata dagli <hr> che la precedono/seguono, mai un
+     gradiente. */
+  .paperBand {
+    background: var(--color-bg-tint);
   }
 
   .searchWrap {
