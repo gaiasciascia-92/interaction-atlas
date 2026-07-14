@@ -1,0 +1,70 @@
+---
+title: 'Editorial Footer'
+category: 'components'
+dna: ['Minimal', 'Quiet', 'Airy', 'Flat', 'Subtle']
+summary: 'L''ultima sezione della pagina non insiste: poche righe di testo, molto spazio, gli stessi divider sottili usati ovunque nel resto del sito.'
+
+overview:
+  description: |
+    Il footer chiude la pagina senza cambiare registro: niente sfondo
+    scuro invertito, niente colonne fitte di link, niente newsletter con
+    un modulo colorato. Solo le informazioni che contano davvero — nome,
+    contatto, eventuali link social essenziali, anno — trattate con lo
+    stesso spazio bianco e la stessa tipografia silenziosa del resto del
+    sito. È la versione editoriale del footer, non quella gestionale.
+
+    Tecnicamente è una sezione a bassa densità: un divider sottile la
+    separa dal contenuto, uno o due righi di testo (`--text-small`,
+    `--color-ink-60`), un solo link di contatto reale (non un modulo). Zero
+    JavaScript, zero stato: è HTML e CSS statici, la parte più semplice
+    del telaio dell'intero sito.
+  bestFor:
+    - 'Portfolio fotografici dove il footer deve chiudere la lettura, non aprire un''altra conversazione (newsletter, social feed)'
+    - 'Siti con pochissime informazioni di contatto reali: un footer minimale non nasconde quanto sia essenziale il contenuto'
+    - 'Progetti dove la coerenza tipografica end-to-end conta più della densità informativa nel footer'
+  avoid:
+    - 'Siti con una sitemap ampia dove il footer deve anche fare da indice di navigazione secondario (qui non c''è spazio per quello)'
+    - 'Progetti che hanno bisogno di raccogliere iscrizioni o contatti attivamente: un footer così silenzioso non converte, non è progettato per farlo'
+    - 'Footer multi-audience (più pubblici, più lingue, più regioni): la sobrietà minimale regge meno bene quando servono molte informazioni distinte'
+
+build:
+  technology: ['CSS']
+  libraries: []
+  difficulty: 1
+  performance: 'light'
+  notes: 'Nessuna interattività necessaria oltre ai link nativi; l''unica attenzione è tipografica — mantenere la stessa gerarchia (dimensione, colore) del resto del sito invece di introdurre una scala a parte "da footer".'
+
+knowledge:
+  origin: 'Non è una tecnica ma una scelta di sobrietà editoriale: la reazione, diffusa dalla seconda metà degli anni 2010, contro i footer "mega" a più colonne ereditati dal web istituzionale e dall''e-commerce.'
+  popularizedBy:
+    - 'Siti editoriali e portfolio di studio con un registro minimale (Read.cv, Linear e riferimenti simili)'
+    - 'La categorizzazione dei pattern di footer di Nielsen Norman Group, che distingue esplicitamente i "mini footer" da quelli a più colonne'
+  alternatives:
+    - 'Mega footer a più colonne (sitemap, newsletter, social), più denso ma incoerente con un registro editoriale minimale'
+    - 'Footer contestuale che cambia per sezione del sito, più informativo ma più complesso da mantenere coerente'
+  resources:
+    - title: 'Footers 101: Design Patterns and When to Use Each'
+      url: 'https://www.nngroup.com/articles/footers/'
+      type: 'article'
+    - title: 'Footer — The only footer gallery on earth.'
+      url: 'https://www.footer.design/'
+      type: 'demo'
+
+explore:
+  relatedEffects: ['link-underline-reveal']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Il test più semplice per un footer editoriale
+  è chiedersi se toglierebbe qualcosa alla pagina se fosse ancora più
+  corto. Nell'Atlas stesso il footer è già a questo minimo — nome, anno, un
+  solo contatto — ed è il riferimento diretto per questa voce.
+
+preview:
+  kind: 'css'
+  lite: 'editorial-footer'
+  module: 'src/previews/editorial-footer.ts'
+
+addedAt: '2026-07-15'
+status: 'draft'
+---

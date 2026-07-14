@@ -1,0 +1,43 @@
+/* Nomi di classe con prefisso univoco: vedi commento in magnetic-cursor.css
+   — Astro raggruppa il CSS di tutti i moduli preview nelle pagine che
+   montano PreviewPane, nomi generici condivisi tra più preview.css
+   entrano nella stessa cascata e possono sovrascriversi a vicenda. */
+.magazine-grid-stage {
+  width: 100%;
+  height: 100%;
+  padding: var(--space-3);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  grid-auto-flow: dense;
+  gap: var(--space-1);
+}
+
+.magazine-grid-tile {
+  background: var(--color-primary-soft);
+  border: var(--border-thin);
+  transition: background var(--duration-instant) var(--ease-out);
+}
+
+.magazine-grid-tile:nth-child(2n) {
+  background: var(--color-warm-soft);
+}
+
+.magazine-grid-tile:hover {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+.magazine-grid-tile.is-wide {
+  grid-column: span 2;
+}
+
+.magazine-grid-tile.is-tall {
+  grid-row: span 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magazine-grid-tile {
+    transition: none;
+  }
+}

@@ -1,0 +1,74 @@
+---
+title: 'Fullscreen Menu Overlay'
+category: 'components'
+dna: ['Bold', 'Kinetic', 'Sharp', 'Dramatic', 'Geometric']
+summary: 'Il menu non è un pannello laterale: è l''intero schermo, con poche voci in tipografia grande al posto di una lista di link piccoli.'
+
+overview:
+  description: |
+    Al posto di un pannello che scivola da un lato o di un dropdown, la
+    navigazione occupa l'intero schermo: un pugno di voci (le sezioni
+    principali del sito, non un sitemap completo) in tipografia grande,
+    spesso una per riga, con lo sfondo della pagina completamente coperto.
+    È una dichiarazione di tono tanto quanto un meccanismo di navigazione —
+    funziona quando le voci sono poche e ognuna pesa.
+
+    Tecnicamente è un overlay `position: fixed`, `inset: 0`, con `z-index`
+    sopra ogni altro elemento del telaio, attivato da un bottone toggle
+    (mai un semplice hover, per restare azionabile da tastiera e touch). Il
+    focus si sposta al primo link della lista all'apertura e resta
+    intrappolato dentro l'overlay finché non si chiude (Esc, click sul
+    bottone, o click su una voce che naviga); alla chiusura senza
+    navigazione, il focus torna al bottone che ha aperto il menu.
+  bestFor:
+    - 'Siti con una struttura semplice (4-6 sezioni), dove ogni voce merita spazio invece di essere compressa in una barra'
+    - 'Portfolio che vogliono un momento di pausa/pattern-break tra la navigazione e il contenuto, non solo una lista di link'
+    - 'Progetti dove la navigazione stessa fa parte del linguaggio visivo del sito, non un elemento neutro del telaio'
+
+  avoid:
+    - 'Siti con molte sezioni o una gerarchia a più livelli: l''overlay a schermo intero regge male più di una decina di voci'
+    - 'Interfacce dove l''utente deve muoversi rapidamente tra sezioni frequenti: aprire e chiudere un overlay pieno schermo ad ogni cambio è più lento di una nav persistente'
+    - 'Pagine dove il contenuto sottostante deve restare parzialmente visibile durante la navigazione (qui sparisce del tutto, a differenza di un pannello laterale)'
+
+build:
+  technology: ['JavaScript', 'CSS']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: 'Il focus trap e il ritorno del focus al bottone toggle sono la parte più delicata, non l''animazione: senza, l''overlay è inutilizzabile da tastiera. `visibility` in transizione ritardata rispetto a `opacity` evita che l''overlay resti cliccabile/tabbabile mentre è invisibile.'
+
+knowledge:
+  origin: 'Pattern affermato nei siti "creative dev" e nei portfolio di studio dalla prima metà degli anni 2010, quando la navigazione a hamburger si è affermata anche su desktop come alternativa a una barra sempre visibile.'
+  popularizedBy:
+    - 'Portfolio di studi creativi e agenzie digitali'
+    - 'La collezione "Fullscreen Overlay Styles & Effects" di Codrops, un riferimento diffuso per le varianti di apertura'
+  alternatives:
+    - 'Nav persistente in barra (come quella dell''Atlas), sempre visibile ma meno scenografica'
+    - 'Pannello laterale (drawer), che copre solo una porzione dello schermo lasciando il contenuto parzialmente visibile'
+  resources:
+    - title: 'Full Screen Navigation Overlay'
+      url: 'https://www.taniarascia.com/full-screen-navigation-overlay/'
+      type: 'article'
+    - title: 'Fullscreen Overlay Effects'
+      url: 'https://tympanus.net/codrops/2014/02/06/fullscreen-overlay-effects/'
+      type: 'article'
+
+explore:
+  relatedEffects: ['page-transition-cover', 'link-underline-reveal']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Le voci del menu sono l'unico posto dove la
+  tipografia grande dell'Atlas potrebbe davvero "recitare": vale la pena
+  trattarle come titoli, non come link. Il limite è la disciplina — appena
+  servono sotto-voci o una ricerca dentro il menu, questo pattern ha finito
+  la sua corsa e serve altro.
+
+preview:
+  kind: 'css'
+  lite: 'fullscreen-menu-overlay'
+  module: 'src/previews/fullscreen-menu-overlay.ts'
+
+addedAt: '2026-07-15'
+status: 'draft'
+---

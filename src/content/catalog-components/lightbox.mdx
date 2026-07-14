@@ -1,0 +1,75 @@
+---
+title: 'Lightbox'
+category: 'components'
+dna: ['Refined', 'Cinematic', 'Dramatic', 'Dimensional', 'Blurred']
+summary: 'Un click su una miniatura porta l''immagine in primo piano su uno sfondo scurito e sfocato: il resto della pagina si ritira senza scomparire.'
+
+overview:
+  description: |
+    Una griglia o una galleria restano il punto d'ingresso; il lightbox è
+    dove l'immagine viene effettivamente guardata. Al click su una
+    miniatura, l'immagine a piena risoluzione appare sopra il resto della
+    pagina — che si scurisce e si sfoca leggermente invece di sparire — con
+    controlli minimi per scorrere avanti/indietro e chiudere. Non è una
+    nuova pagina: è la stessa pagina che si mette in pausa.
+
+    Tecnicamente è un overlay `position: fixed` con `inset: 0`, montato in
+    un nodo separato dal flusso della griglia (mai dentro un contenitore con
+    `overflow: hidden`, che lo ritaglierebbe). Il focus si sposta
+    programmaticamente all'apertura e viene intrappolato dentro l'overlay
+    finché non si chiude (Esc, click sullo sfondo, o il bottone di chiusura)
+    per restare navigabile da tastiera; alla chiusura il focus torna
+    esattamente sulla miniatura che ha aperto il lightbox.
+  bestFor:
+    - 'Serie fotografiche dove l''immagine deve essere vista a piena risoluzione, non solo come miniatura'
+    - 'Portfolio con un ordine di visione preciso (una sequenza), dove avanti/indietro conta quanto lo zoom'
+    - 'Gallerie dense, dove aprire ogni immagine in una pagina propria romperebbe il ritmo di consultazione'
+  avoid:
+    - 'Un''unica immagine isolata: il lightbox è un contenitore di navigazione, su una sola immagine è solo peso in più'
+    - 'Contenuti che devono restare linkabili singolarmente (un URL per immagine): serve allora una vera pagina, non un overlay'
+    - 'Dispositivi con connessione lenta se le immagini a piena risoluzione non sono già precaricate: l''attesa dentro un overlay scuro si percepisce come un errore'
+
+build:
+  technology: ['JavaScript', 'CSS']
+  libraries:
+    - name: 'PhotoSwipe'
+      url: 'https://photoswipe.com/'
+  difficulty: 3
+  performance: 'moderate'
+  notes: 'Il costo non è l''overlay ma le immagini a piena risoluzione: vanno precaricate solo per l''immagine corrente e le due adiacenti, mai l''intera serie in anticipo. Focus trap e ripristino del focus sono obbligatori, non opzionali.'
+
+knowledge:
+  origin: 'Il termine "lightbox" nasce dallo script omonimo di Lokesh Dhakar (2005), che per primo ha reso popolare l''overlay scurito con immagine centrata sul web; l''idea stessa richiama il tavolo luminoso da fotografo per esaminare i negativi.'
+  popularizedBy:
+    - 'PhotoSwipe, oggi lo standard de facto per lightbox performanti e accessibili'
+    - 'Portfolio fotografici e gallerie editoriali di ogni epoca del web'
+  alternatives:
+    - 'Apertura in una pagina/route dedicata per immagine, più linkabile ma più lenta da consultare in sequenza'
+    - 'Hover Image Reveal per un''anteprima senza mai lasciare la lista, senza però lo zoom a piena risoluzione'
+  resources:
+    - title: 'PhotoSwipe'
+      url: 'https://photoswipe.com/'
+      type: 'demo'
+    - title: 'Getting Started — PhotoSwipe'
+      url: 'https://photoswipe.com/getting-started/'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['blur-reveal']
+  relatedComponents: ['magazine-grid', 'horizontal-gallery']
+
+insight: >-
+  [DA REVISIONARE — curatore] Il dettaglio che separa un lightbox curato da
+  uno improvvisato non è l'animazione d'apertura: è dove torna il focus alla
+  chiusura. Su un portfolio fotografico lo sfondo sfocato invece di nero
+  pieno aiuta a non perdere il contesto della griglia — chi guarda sa
+  sempre di essere ancora nella stessa pagina.
+
+preview:
+  kind: 'css'
+  lite: 'lightbox'
+  module: 'src/previews/lightbox.ts'
+
+addedAt: '2026-07-15'
+status: 'draft'
+---

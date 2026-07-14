@@ -1,0 +1,74 @@
+---
+title: 'Sticky Hero'
+category: 'components'
+dna: ['Bold', 'Monumental', 'Dramatic', 'Dimensional', 'Slow']
+summary: 'L''immagine di apertura resta ferma sullo schermo mentre il testo che la introduce le scorre sopra: due strati che si muovono a velocità diverse.'
+
+overview:
+  description: |
+    L'immagine hero di un progetto non scompare subito allo scroll: resta
+    fissa, occupando lo schermo, mentre il blocco successivo (titolo,
+    testo introduttivo, meta-dati del progetto) scorre sopra di essa fino a
+    coprirla del tutto. L'effetto è di profondità — due piani a velocità
+    diverse — ottenuto con un solo elemento fissato, non con calcoli di
+    parallasse per ogni fotogramma.
+
+    Tecnicamente l'immagine ha `position: sticky; top: 0` dentro un
+    contenitore più alto di lei (tipicamente 150-200vh): finché il
+    contenitore scorre, l'immagine resta agganciata in cima al viewport, e
+    solo quando il contenitore stesso esce dal flusso l'immagine riprende a
+    scorrere con il resto della pagina. Il blocco di testo successivo, con
+    un margine negativo o una propria altezza extra, scorre visivamente
+    sopra l'immagine ferma grazie al normale ordine di stacking — nessun
+    listener di scroll, nessun calcolo per frame.
+  bestFor:
+    - 'Apertura di un case study, dove l''immagine principale del progetto merita un momento di permanenza prima di cedere il posto al testo'
+    - 'Portfolio con una sola immagine "manifesto" per progetto, dove vale la pena trattarla come un momento, non solo come un''illustrazione'
+    - 'Pagine dove il rapporto tra immagine e testo introduttivo deve essere letto come sovrapposizione, non come sequenza'
+  avoid:
+    - 'Hero con testo che deve restare leggibile in ogni istante: il momento di sovrapposizione tra testo e immagine va progettato con cura del contrasto, o diventa illeggibile'
+    - 'Sequenze con più hero sticky consecutivi nella stessa pagina: l''effetto perde forza e rallenta la discesa nella pagina'
+    - 'Contenuti dove la prima immagine non è abbastanza forte da reggere 150-200vh di permanenza sullo schermo'
+
+build:
+  technology: ['CSS']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: '`position: sticky` è nativo e non richiede JavaScript; l''unica attenzione è l''altezza del contenitore che ospita l''immagine (deve essere maggiore del viewport perché lo "sgancio" avvenga in un punto controllato, non subito).'
+
+knowledge:
+  origin: 'Reso possibile in forma semplice dal supporto diffuso di `position: sticky` (metà anni 2010); prima richiedeva `position: fixed` con calcolo manuale del punto di sgancio via JavaScript, molto più fragile su resize e contenuti dinamici.'
+  popularizedBy:
+    - 'Portfolio di studi creativi e siti editoriali con narrazione forte'
+    - 'Articoli tecnici come quello di CodyHouse sulla sticky hero section'
+  alternatives:
+    - 'Parallasse calcolata via JavaScript (velocità diverse per più livelli), più flessibile ma più costosa e più fragile'
+    - 'Hero statica senza alcun effetto di permanenza, la scelta più semplice e più prevedibile'
+  resources:
+    - title: 'How to create a Sticky Hero section'
+      url: 'https://codyhouse.co/blog/post/sticky-hero-section'
+      type: 'article'
+    - title: 'position — MDN'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/position'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['smooth-scroll']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] Il rischio più comune è tenere l'immagine
+  ferma troppo a lungo: 150-200vh è già al limite, oltre diventa un'attesa,
+  non un momento. In un case study fotografico funziona meglio quando il
+  testo che scorre sopra è breve — poche righe, non l'intera introduzione
+  del progetto.
+
+preview:
+  kind: 'css'
+  lite: 'sticky-hero'
+  module: 'src/previews/sticky-hero.ts'
+
+addedAt: '2026-07-15'
+status: 'draft'
+---

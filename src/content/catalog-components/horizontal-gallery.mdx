@@ -1,0 +1,73 @@
+---
+title: 'Horizontal Gallery'
+category: 'components'
+dna: ['Editorial', 'Kinetic', 'Fluid', 'Cinematic', 'Airy']
+summary: 'Una serie di immagini si consulta scorrendo di lato, non verso il basso: un gesto diverso per un contenuto che si legge come una sequenza.'
+
+overview:
+  description: |
+    Una selezione di immagini strettamente sequenziale — una serie, un
+    reportage, gli scatti di un unico servizio — si presenta in fila
+    orizzontale invece che impilata verticalmente. Lo scroll laterale rende
+    esplicito che le immagini vanno lette in ordine, una dopo l'altra, come
+    i fotogrammi di un rullino: un linguaggio visivo diverso dal semplice
+    "scorri per vedere altro" dello scroll verticale.
+
+    Tecnicamente è un contenitore a `overflow-x: auto` (o guidato via
+    JavaScript per un'interpolazione più morbida) con `scroll-snap-type: x
+    mandatory` sull'asse orizzontale e `scroll-snap-align` su ogni immagine,
+    così lo scorrimento si ferma sempre allineato invece che a metà
+    immagine. Lo scroll verticale della pagina resta intatto: la rotellina
+    del mouse muove l'asse orizzontale solo quando il puntatore è dentro il
+    contenitore, mai per il resto della pagina.
+  bestFor:
+    - 'Un singolo reportage o servizio fotografico da presentare come sequenza, non come griglia esplorabile in ordine libero'
+    - 'Portfolio con immagini molto orizzontali (paesaggio, panoramiche), dove lo scroll laterale rispetta il formato invece di ritagliarlo'
+    - 'Sezioni introduttive di un progetto, dove un assaggio in sequenza precede la griglia completa'
+  avoid:
+    - 'Contenuti che l''utente deve poter scansionare rapidamente: lo scroll laterale è più lento da esplorare dello sguardo verticale su una griglia'
+    - 'Su mobile, più di 8-10 immagini in fila: lo swipe ripetuto stanca più dello scroll verticale nativo'
+    - 'Come pattern di navigazione primario del sito: resta un formato per una sezione, non un sostituto della griglia verticale'
+
+build:
+  technology: ['CSS', 'JavaScript']
+  libraries: []
+  difficulty: 3
+  performance: 'moderate'
+  notes: 'Lo scroll-snap nativo copre la maggior parte dei casi a costo zero di JavaScript; un''interpolazione (lerp) via `requestAnimationFrame` è un''aggiunta opzionale per un''inerzia più morbida, mai un sostituto dello scroll nativo (che deve restare disponibile via tastiera e trackpad).'
+
+knowledge:
+  origin: 'Pattern diffuso nei siti di studio creativi e portfolio fotografici dalla seconda metà degli anni 2010, spesso abbinato a un''interpolazione smooth-scroll per accentuare la sensazione di scorrimento pellicola.'
+  popularizedBy:
+    - 'Portfolio di fotografi e studi creativi'
+    - 'Tutorial Codrops sulle gallerie a scorrimento orizzontale'
+  alternatives:
+    - 'Griglia verticale standard, più scansionabile ma senza l''ordine di lettura sequenziale'
+    - 'Carosello a pagina singola (un''immagine visibile alla volta, frecce prev/next), più compatto ma meno esplorabile con un unico swipe continuo'
+  resources:
+    - title: 'Creating a Smooth Horizontal Parallax Gallery: From DOM to WebGL'
+      url: 'https://tympanus.net/codrops/2026/02/19/creating-a-smooth-horizontal-parallax-gallery-from-dom-to-webgl/'
+      type: 'article'
+    - title: 'CSS scroll snap — MDN'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Scroll_snap'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['smooth-scroll']
+  relatedComponents: ['lightbox']
+
+insight: >-
+  [DA REVISIONARE — curatore] Va bene solo se il contenuto è davvero
+  sequenziale: uso lo scroll orizzontale come dichiarazione ("questa è una
+  serie, guardala in ordine"), mai come variazione estetica su una griglia
+  che in realtà si esplora in ordine libero. Su un reportage fotografico è
+  spesso la scelta più onesta di tutte.
+
+preview:
+  kind: 'css'
+  lite: 'horizontal-gallery'
+  module: 'src/previews/horizontal-gallery.ts'
+
+addedAt: '2026-07-15'
+status: 'draft'
+---

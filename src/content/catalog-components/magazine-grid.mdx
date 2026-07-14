@@ -1,0 +1,72 @@
+---
+title: 'Magazine Grid'
+category: 'components'
+dna: ['Editorial', 'Geometric', 'Asymmetric', 'Sharp', 'Calm']
+summary: 'Una griglia a colonne ineguali dove alcune immagini occupano il doppio spazio delle altre: la gerarchia visiva sostituisce la didascalia.'
+
+overview:
+  description: |
+    Un indice di progetti fotografici non è quasi mai una griglia regolare: la
+    Magazine Grid assegna a ciascuna immagine uno span di colonne e righe
+    diverso, così che il progetto più importante occupi più spazio senza
+    bisogno di un'etichetta che lo dica. È il layout di una rivista letto
+    come pagina web — colonne, non caselle uguali.
+
+    Tecnicamente è `display: grid` con `grid-template-columns` a più tracce
+    (tipicamente 4 o 6) e `grid-auto-flow: dense` per richiudere i vuoti che
+    gli span disomogenei lasciano aperti. Ogni immagine dichiara il proprio
+    `grid-column`/`grid-row` (o una classe di span pre-definita: 1×1, 2×1,
+    1×2, 2×2), mai posizionamento assoluto: il flusso del documento resta
+    intatto, quindi l'ordine di lettura da tastiera e screen reader coincide
+    con l'ordine visivo anche quando lo span lo altera.
+  bestFor:
+    - 'Indici di progetto dove alcuni lavori pesano più di altri e la griglia deve dirlo prima del testo'
+    - 'Portfolio con un numero di progetti sufficiente da riempire più righe (sotto le 6-8 immagini l''asimmetria si nota poco)'
+    - 'Pagine che aprono su un mix di orizzontali e verticali, dove una griglia rigida ritaglierebbe male le immagini'
+  avoid:
+    - 'Serie fotografiche editorialmente omogenee (uno stesso soggetto, stesso formato), dove l''asimmetria introduce una gerarchia che non esiste nel lavoro'
+    - 'Meno di 6-8 immagini: con poche voci gli span disomogenei sembrano un errore di layout, non una scelta'
+    - 'Cataloghi dove ogni progetto deve avere pari visibilità (asimmetria = gerarchia, non neutralità)'
+
+build:
+  technology: ['CSS', 'CSS Grid']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: '`grid-auto-flow: dense` risolve i vuoti ma può riordinare visivamente gli elementi rispetto al DOM: va sempre verificato che l''ordine di tab/lettura resti sensato, non solo che la griglia sia piena.'
+
+knowledge:
+  origin: 'Adattamento diretto della griglia a colonne ineguali della stampa periodica, resa possibile sul web in forma nativa da CSS Grid (2017) — prima richiedeva Masonry via JavaScript o posizionamento assoluto calcolato.'
+  popularizedBy:
+    - 'Portfolio di studi editoriali e riviste digitali'
+    - 'Template e temi "magazine" per CMS editoriali'
+  alternatives:
+    - 'Griglia uniforme (tutte le celle uguali), più semplice ma senza gerarchia visiva'
+    - 'Masonry (colonne a altezza libera, nessuno span dichiarato), più organica ma meno controllabile editorialmente'
+  resources:
+    - title: 'How To Build A Magazine Layout With CSS Grid Areas'
+      url: 'https://www.smashingmagazine.com/2023/02/build-magazine-layout-css-grid-areas/'
+      type: 'article'
+    - title: 'Responsive Grid Magazine Layout in Just 20 Lines of CSS'
+      url: 'https://css-tricks.com/responsive-grid-magazine-layout-in-just-20-lines-of-css/'
+      type: 'article'
+
+explore:
+  relatedEffects: ['hover-image-reveal']
+  relatedComponents: ['lightbox']
+
+insight: >-
+  [DA REVISIONARE — curatore] La griglia asimmetrica funziona solo se gli
+  span sono decisi da un editor, non da un algoritmo di riempimento: la
+  prima cosa che tradisce un layout magazine automatico è una gerarchia che
+  non corrisponde a nessuna scelta reale. In un portfolio fotografico gli
+  span vanno assegnati progetto per progetto, mai per rotazione.
+
+preview:
+  kind: 'css'
+  lite: 'magazine-grid'
+  module: 'src/previews/magazine-grid.ts'
+
+addedAt: '2026-07-15'
+status: 'draft'
+---
