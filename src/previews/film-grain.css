@@ -1,0 +1,59 @@
+/* Nomi di classe con prefisso univoco: vedi commento in magnetic-cursor.css
+   — Astro raggruppa il CSS di tutti i moduli preview nelle pagine che
+   montano PreviewPane, nomi generici condivisi tra più preview.css
+   entrano nella stessa cascata e possono sovrascriversi a vicenda. */
+.film-grain-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Colore deliberato (TASK_013): Purple che si risolve in Orange, coerente
+   con blur-reveal.css/PreviewLite invece di un grigio neutro. */
+.film-grain-photo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-warm-soft) 55%, var(--color-warm));
+}
+
+/* Rumore procedurale via filtro SVG (feTurbulence), non un asset esterno —
+   nessun colore embedded: la texture è in scala di grigi per costruzione. */
+.film-grain-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Durata libera (non --duration-*): il motion delle preview non è governato
+   da MOTION_PRINCIPLES.md, solo quello del telaio — stesso principio di
+   blur-reveal.css. Il tremolio della grana è a scatti (steps()) per natura,
+   mai un'interpolazione morbida. */
+.film-grain-stage.is-live .film-grain-noise {
+  animation: film-grain-flicker 700ms steps(6) infinite; /* token-guard: allow */
+}
+
+@keyframes film-grain-flicker {
+  0% {
+    background-position: 0 0;
+  }
+  20% {
+    background-position: -37px 19px;
+  }
+  40% {
+    background-position: 22px -41px;
+  }
+  60% {
+    background-position: -18px -29px;
+  }
+  80% {
+    background-position: 31px 14px;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}

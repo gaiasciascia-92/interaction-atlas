@@ -1,0 +1,76 @@
+---
+title: 'Depth Parallax'
+category: 'visual-effects'
+dna: ['Bold', 'Floating', 'Dimensional', 'Cinematic', 'Fluid']
+summary: 'Più piani si spostano a velocità diverse al movimento del cursore: quello più vicino corre, quello più lontano appena accenna — la profondità di uno sguardo, senza uno shader.'
+
+overview:
+  description: |
+    Un'immagine o una composizione tipografica non è un piano unico: è
+    scomposta in 2-3 strati che rispondono al movimento del cursore con
+    un'intensità diversa ciascuno. Lo strato "vicino" si sposta molto, quello
+    "lontano" appena percettibilmente — la stessa illusione della vista
+    umana quando la testa si muove davanti a una scena reale. Nessuna
+    immagine si deforma: sono le loro posizioni relative a costruire la
+    profondità.
+
+    Tecnicamente ogni strato ha un proprio moltiplicatore di intensità
+    (tipicamente 0.02–0.15) applicato allo scarto tra la posizione del
+    cursore e il centro del contenitore; il risultato passa a
+    `gsap.quickTo()`, un'interpolazione per strato che rende il movimento
+    fluido senza ricreare un tween ad ogni `pointermove`. Nessuna
+    prospettiva 3D reale (`perspective`/`translateZ`) è necessaria: bastano
+    traslazioni 2D a velocità diverse per leggere la profondità.
+  bestFor:
+    - 'Hero composte da più elementi (un titolo, una forma, un''immagine) dove la profondità aggiunge un livello di lettura senza un shader dedicato'
+    - 'Cover di progetto con un''unica composizione impaginata, dove il movimento discreto del cursore invita a restare più a lungo'
+    - 'Portfolio che vogliono l''impatto della profondità senza il peso di un contesto WebGL (alternativa dichiarata a Webgl Displacement Hover)'
+  avoid:
+    - 'Più di una composizione a parallasse per schermata: l''effetto satura rapidamente se ripetuto'
+    - 'Interfacce touch-only, dove non esiste un cursore che si muove liberamente sopra il contenuto'
+    - 'Composizioni con testo che deve restare leggibile con precisione: strati che si spostano indipendentemente possono disallineare temporaneamente gli elementi'
+
+build:
+  technology: ['JavaScript', 'GSAP']
+  libraries:
+    - name: 'GSAP'
+      url: 'https://gsap.com/'
+  difficulty: 3
+  performance: 'moderate'
+  notes: 'Il costo è nel numero di strati, non nella tecnica: 2-3 strati con `gsap.quickTo()` restano economici, oltre i 4-5 il calcolo per `pointermove` inizia a pesare. Nessuna dipendenza da `perspective` 3D: l''illusione regge anche con semplici `translate()` 2D.'
+
+knowledge:
+  origin: 'Il parallasse a più strati guidato dal cursore è una delle tecniche più antiche del web design "creative dev", precedente persino al parallasse da scroll; è tornato centrale nella seconda metà degli anni 2010 come alternativa leggera alla distorsione via shader.'
+  popularizedBy:
+    - 'Portfolio di studi creativi e agenzie digitali'
+    - 'Tutorial diffusi su Creative Bloq e testate simili per il parallasse guidato dal mouse'
+  alternatives:
+    - 'WebGL Displacement Hover, più spettacolare ma con il costo e i vincoli di un contesto WebGL dedicato'
+    - 'Nessun movimento, lasciando la composizione statica: la scelta più prevedibile e più leggera in assoluto'
+  resources:
+    - title: 'Create a mouse-controlled parallax background effect'
+      url: 'https://www.creativebloq.com/how-to/create-a-mouse-controlled-parallax-background-effect'
+      type: 'article'
+    - title: 'perspective — MDN'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/perspective'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['webgl-displacement-hover', 'glass-blur-layers']
+  relatedComponents: ['sticky-hero']
+
+insight: >-
+  [DA REVISIONARE — curatore] È l'alternativa giusta quando WebGL
+  Displacement Hover è troppo: stesso registro di profondità, un decimo del
+  peso. In un portfolio fotografico lo terrei su una composizione impaginata
+  (testo + forma), non direttamente su una fotografia — separare la foto in
+  strati richiede un ritaglio che raramente vale il risultato.
+
+preview:
+  kind: 'gsap'
+  lite: 'depth-parallax'
+  module: 'src/previews/depth-parallax.ts'
+
+addedAt: '2026-07-16'
+status: 'draft'
+---

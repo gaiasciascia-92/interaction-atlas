@@ -1,0 +1,73 @@
+---
+title: 'Film Grain'
+category: 'visual-effects'
+dna: ['Raw', 'Grainy', 'Subtle', 'Cinematic', 'Soft']
+summary: 'Un velo di rumore fine, in costante lieve movimento, sovrapposto all''immagine: la texture della pellicola invece della pulizia del sensore digitale.'
+
+overview:
+  description: |
+    Un'immagine digitale, per quanto ben scattata, resta perfettamente
+    pulita — e la pulizia perfetta non è sempre il registro giusto per un
+    portfolio fotografico. Film Grain sovrappone un velo di rumore fine che
+    tremola a bassa frequenza, la stessa imperfezione organica della
+    pellicola argentica: non nasconde l'immagine, la texture appena.
+
+    Tecnicamente è un livello separato sopra l'immagine — un pattern di
+    rumore generato via filtro SVG (`feTurbulence`, rumore procedurale,
+    risoluzione-indipendente) o una piccola texture in tiling — composto con
+    `mix-blend-mode: overlay` e animato spostando `background-position` a
+    scatti (`steps()`) tra pochi fotogrammi, mai con un'interpolazione
+    morbida: il tremolio della grana è per natura discontinuo, non fluido.
+    Nessun canvas, nessun redraw per frame: l'intera animazione è
+    dichiarativa, un'unica `@keyframes` in loop.
+  bestFor:
+    - 'Serie in bianco e nero o dal tono analogico dichiarato, dove la grana è coerente con l''estetica della serie'
+    - 'Cover o immagini hero uniche, dove una texture sottile aggiunge carattere senza competere con il soggetto'
+    - 'Portfolio che vogliono distinguersi dalla pulizia patinata tipica dei siti fotografici commerciali'
+  avoid:
+    - 'Fotografia di prodotto o still life dove la fedeltà cromatica e la nitidezza sono il punto (la grana è letteralmente rumore aggiunto)'
+    - 'Gallerie dense con molte immagini contemporaneamente in vista: il costo di composizione per immagine si somma rapidamente'
+    - 'Chi scatta già su pellicola vera: aggiungere grana digitale a una grana ottica reale è ridondante, spesso peggiorativo'
+
+build:
+  technology: ['CSS', 'SVG']
+  libraries: []
+  difficulty: 2
+  performance: 'light'
+  notes: 'Il filtro SVG è più leggero di un canvas ridisegnato ad ogni frame, ma su superfici molto grandi il costo di rendering del filtro può salire: preferibile applicarlo a una singola immagine hero piuttosto che a un''intera griglia.'
+
+knowledge:
+  origin: 'Emulazione digitale di un''imperfezione fisica — la grana della pellicola argentica — diffusa nel design "creative dev" dalla fine degli anni 2010 come reazione alla perfezione patinata della fotografia digitale.'
+  popularizedBy:
+    - 'Portfolio fotografici e siti di studio con un registro editoriale/analogico dichiarato'
+    - 'Sara Soueidan e la sua esplorazione dei filtri SVG per texture su Codrops'
+  alternatives:
+    - 'Nessun trattamento, lasciando l''immagine digitale pulita così com''è'
+    - 'Preset di grana applicati direttamente in post-produzione (nel file immagine stesso, non a runtime)'
+  resources:
+    - title: 'SVG Filter Effects: Creating Texture with <feTurbulence>'
+      url: 'https://tympanus.net/codrops/2019/02/19/svg-filter-effects-creating-texture-with-feturbulence/'
+      type: 'article'
+    - title: 'Grainy Gradients'
+      url: 'https://css-tricks.com/grainy-gradients/'
+      type: 'article'
+
+explore:
+  relatedEffects: ['blur-reveal']
+  relatedComponents: []
+
+insight: >-
+  [DA REVISIONARE — curatore] La grana funziona quando resta appena sopra
+  la soglia percettiva: visibile se la si cerca, invisibile se non ci si
+  pensa. Il test più semplice è guardare altrove per qualche secondo e
+  tornare sull'immagine — se la texture "salta all'occhio" al primo
+  sguardo, è troppo forte per un portfolio fotografico serio.
+
+preview:
+  kind: 'css'
+  lite: 'film-grain'
+  module: 'src/previews/film-grain.ts'
+
+addedAt: '2026-07-16'
+status: 'draft'
+---

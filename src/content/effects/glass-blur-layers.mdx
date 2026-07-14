@@ -1,0 +1,72 @@
+---
+title: 'Glass Blur Layers'
+category: 'visual-effects'
+dna: ['Elegant', 'Glassy', 'Layered', 'Calm', 'Dimensional']
+summary: 'Pannelli traslucidi sovrapposti sfocano ciò che hanno dietro invece di nasconderlo: la profondità del vetro smerigliato, non di un''ombra.'
+
+overview:
+  description: |
+    Uno o più pannelli quasi trasparenti si sovrappongono al contenuto
+    sottostante senza coprirlo: lo sfocano, lasciandone intuire colore e
+    forma come attraverso un vetro smerigliato. La profondità non viene da
+    un'ombra proiettata ma dalla trasparenza stessa — più pannelli
+    impilati, più la scena sotto si allontana percettivamente.
+
+    Tecnicamente ogni pannello è `background` semi-trasparente più
+    `backdrop-filter: blur()`, con un valore di sfocatura crescente per i
+    pannelli più "vicini" alla superficie (tipicamente 4-16px). Il
+    `backdrop-filter` sfoca solo ciò che sta *dietro* l'elemento, non
+    l'elemento stesso: per questo un bordo sottile e una leggerissima
+    variazione di opacità bastano a definire il confine del vetro senza
+    ricorrere a ombre.
+  bestFor:
+    - 'Overlay informativi su un''immagine (didascalie, meta-dati di progetto) dove il testo deve restare leggibile ma l''immagine sotto non deve sparire'
+    - 'Composizioni con più immagini sovrapposte, dove i pannelli di vetro suggeriscono un ordine di profondità senza bordi netti'
+    - 'Portfolio con un registro elegante e contemporaneo, dove la trasparenza comunica leggerezza meglio di un riquadro pieno'
+  avoid:
+    - 'Sfondi già poco contrastati o uniformi: senza qualcosa di riconoscibile dietro, l''effetto vetro non si legge (serve un retro con colore o forma)'
+    - 'Più di 2-3 pannelli sovrapposti sulla stessa area: ogni `backdrop-filter` aggiuntivo ha un costo di composizione GPU che si somma'
+    - 'Browser o dispositivi datati senza supporto a `backdrop-filter`: senza un fallback opaco il testo sopra un pannello trasparente può risultare illeggibile'
+
+build:
+  technology: ['CSS']
+  libraries: []
+  difficulty: 2
+  performance: 'moderate'
+  notes: '`backdrop-filter` è composto dalla GPU e il costo cresce con l''area coperta e il numero di pannelli sovrapposti: su una preview piccola è trascurabile, su un overlay a piena pagina con più strati va misurato. Serve sempre un fallback (`background` opaco) per i motori senza supporto.'
+
+knowledge:
+  origin: 'Reso pienamente praticabile sul web dal supporto diffuso di `backdrop-filter` (metà anni 2020, dopo anni di prefisso solo WebKit); l''estetica stessa — "glassmorphism" — richiama il vetro smerigliato dei sistemi operativi desktop dei primi anni 2020.'
+  popularizedBy:
+    - 'Il trend "glassmorphism" nel design di interfaccia dei primi anni 2020'
+    - 'Josh W. Comeau, il cui articolo di riferimento sul frosted glass ha raffinato la tecnica oltre il semplice blur di base'
+  alternatives:
+    - 'Overlay a tinta piena semi-trasparente (senza `backdrop-filter`), più leggero ma senza la sfocatura del retro'
+    - 'Blur Reveal, dove la sfocatura è temporanea e narrativa invece che permanente e materiale'
+  resources:
+    - title: 'Next-level frosted glass with backdrop-filter'
+      url: 'https://www.joshwcomeau.com/css/backdrop-filter/'
+      type: 'article'
+    - title: 'backdrop-filter — MDN'
+      url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter'
+      type: 'doc'
+
+explore:
+  relatedEffects: ['blur-reveal', 'depth-parallax']
+  relatedComponents: ['lightbox']
+
+insight: >-
+  [DA REVISIONARE — curatore] Il vetro convince solo se dietro c'è qualcosa
+  che vale la pena intuire — un colore, una forma, mai un fondo vuoto. In un
+  portfolio fotografico lo userei per una didascalia sopra l'immagine
+  stessa, mai come contenitore autonomo su sfondo neutro: lì l'effetto non
+  ha nulla da sfocare e diventa solo un riquadro semitrasparente qualunque.
+
+preview:
+  kind: 'css'
+  lite: 'glass-blur-layers'
+  module: 'src/previews/glass-blur-layers.ts'
+
+addedAt: '2026-07-16'
+status: 'draft'
+---

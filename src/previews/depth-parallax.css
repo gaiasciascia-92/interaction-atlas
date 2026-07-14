@@ -1,0 +1,40 @@
+/* Nomi di classe con prefisso univoco: vedi commento in magnetic-cursor.css
+   — Astro raggruppa il CSS di tutti i moduli preview nelle pagine che
+   montano PreviewPane, nomi generici condivisi tra più preview.css
+   entrano nella stessa cascata e possono sovrascriversi a vicenda. */
+.depth-parallax-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.depth-parallax-layer {
+  position: absolute;
+  will-change: transform;
+}
+
+/* Colore deliberato (TASK_013): Purple/Orange sui tre piani invece di grigi
+   neutri — più "vicino" il piano, più netto il colore. */
+.depth-parallax-back {
+  width: 70%;
+  height: 70%;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(circle, var(--color-warm-soft), transparent 70%);
+}
+
+.depth-parallax-mid {
+  width: 42%;
+  height: 42%;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-m);
+}
+
+.depth-parallax-front {
+  position: relative;
+  color: var(--color-ink);
+  z-index: 1;
+}
